@@ -24,4 +24,7 @@ public interface AccessKeyRepository extends JpaRepository<AccessKey, Integer> {
     //Find all keys that have expired
     List<AccessKey> findAllByExpiryDateBefore(LocalDateTime now);
 
+    //Find the access key by key String
+    AccessKey findByKey(String key);
+
 }
