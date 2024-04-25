@@ -23,24 +23,23 @@ public class AccessKey {
     private String status;
 
     @Column(nullable = false)
-    private LocalDateTime procurement_date;
+    private LocalDateTime procurementDate;
 
     @Column(nullable = false)
-    private LocalDateTime expiry_date;
+    private LocalDateTime expiryDate;  // Ensure this field name is `expiryDate`
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime created_at = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(nullable = false)
-    private LocalDateTime updated_at = LocalDateTime.now();
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name =  "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @PreUpdate
-    protected void onUpdate(){
-        updated_at = LocalDateTime.now();
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
-
 }
