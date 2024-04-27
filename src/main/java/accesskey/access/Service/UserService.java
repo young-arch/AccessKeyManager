@@ -31,6 +31,7 @@ public class UserService{
 
     //Update a user's password
     public void updatePassword(String email, String newPassword){
+
         String encodedPassword = passwordEncoder.encode(newPassword);
         userRepository.updatePasswordByEmail(email, encodedPassword);
     }
