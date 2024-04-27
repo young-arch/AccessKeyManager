@@ -37,4 +37,9 @@ public class AccessKeyService{
         accessKeyRepository.updateStatusById(keyId, newStatus);
     }
 
+    //Find and revoke an access key
+    public void revokeAccessKey(Integer keyId){
+        accessKeyRepository.updateStatusById(keyId, "REVOKED");
+    }
+
 }
