@@ -36,4 +36,11 @@ public class UserController{
         }
     }
 
+    //Update a user's password
+    @PutMapping("/{email}/password")
+    public ResponseEntity<Void> updatePassword(@PathVariable String email, @RequestBody String newPassword){
+        userService.updatePassword(email, newPassword);
+        return ResponseEntity.noContent().build();
+    }
+
 }
