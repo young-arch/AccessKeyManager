@@ -5,6 +5,7 @@ import accesskey.access.Repository.AccessKeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -41,5 +42,16 @@ public class AccessKeyService{
     public void revokeAccessKey(Integer keyId){
         accessKeyRepository.updateStatusById(keyId, "REVOKED");
     }
+
+    //Find all expired access keys
+    public List<AccessKey> findExpiredAccessKeys(){
+        return accessKeyRepository.findAllByExpiryDateBefore(LocalDateTime.now());
+    }
+
+    //Find access key by key string
+    public AccessKey findAccessKeyByKey(String key){
+        return accessKeyRepository.findByKey(key);
+    }
+
 
 }
