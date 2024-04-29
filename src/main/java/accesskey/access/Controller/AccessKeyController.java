@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/accesskeys")
 public class AccessKeyController {
@@ -35,5 +37,12 @@ public class AccessKeyController {
         else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    //Find all expired access keys
+    @GetMapping("/expired")
+    public ResponseEntity<List<AccessKey>> findExpiredAccessKeys(){
+        List<AccessKey> expiredKeys = accessKeyService.findExpiredAccessKeys();
+        return ResponseEntity.ok(expiredKeys);
     }
 }
