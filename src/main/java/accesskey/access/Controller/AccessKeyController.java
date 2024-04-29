@@ -2,6 +2,7 @@ package accesskey.access.Controller;
 
 import accesskey.access.Entity.AccessKey;
 import accesskey.access.Service.AccessKeyService;
+import accesskey.access.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 public class AccessKeyController {
 
     private final AccessKeyService accessKeyService;
+
 
     @Autowired
     public AccessKeyController(AccessKeyService accessKeyService){
@@ -30,19 +32,42 @@ public class AccessKeyController {
     //Find active access keys for a user
     @GetMapping("/user/{userId}")
     public ResponseEntity<AccessKey> findActiveAccesskey(@PathVariable Integer userId){
+
         AccessKey activeAccessKey = accessKeyService.findActiveAccessKey(userId);
+
         if (activeAccessKey != null){
+
             return ResponseEntity.ok(activeAccessKey);
         }
+
         else {
+
             return ResponseEntity.notFound().build();
+
         }
+
     }
 
     //Find all expired access keys
     @GetMapping("/expired")
     public ResponseEntity<List<AccessKey>> findExpiredAccessKeys(){
+
         List<AccessKey> expiredKeys = accessKeyService.findExpiredAccessKeys();
+
         return ResponseEntity.ok(expiredKeys);
     }
+
+    //Revoke an access key
+    @PutMapping("/{keyId}/revoke")
+    public ResponseEntity<Void> revokeAccesskey(@PathVariable Integer keyId){
+
+        accessKeyService.revokeAccessKey(keyId);
+
+        return ResponseEntity.noContent().build();
+
+    }
+
+
+
+
 }
