@@ -26,4 +26,11 @@ public class GlobalExceptionHandler {
 
     }
 
+    //Illegal Argument Exception
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex, WebRequest request){
+
+        return new ResponseEntity<>("An error occured: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
