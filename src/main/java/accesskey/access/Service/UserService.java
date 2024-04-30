@@ -36,4 +36,10 @@ public class UserService{
         userRepository.updatePasswordByEmail(email, encodedPassword);
     }
 
+    //Check if a user exits by email
+    public boolean userExists(String email){
+        return userRepository.existsByEmail(email);
+    }
+
+
 }

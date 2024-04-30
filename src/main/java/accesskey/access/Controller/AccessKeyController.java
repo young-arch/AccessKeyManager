@@ -30,8 +30,8 @@ public class AccessKeyController {
     }
 
     //Find active access keys for a user
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<AccessKey> findActiveAccesskey(@PathVariable Integer userId){
+    @GetMapping("/user/{userId}/active")
+    public ResponseEntity<AccessKey> findActiveAccessKey(@PathVariable Integer userId){
 
         AccessKey activeAccessKey = accessKeyService.findActiveAccessKey(userId);
 
@@ -59,12 +59,19 @@ public class AccessKeyController {
 
     //Revoke an access key
     @PutMapping("/{keyId}/revoke")
-    public ResponseEntity<Void> revokeAccesskey(@PathVariable Integer keyId){
+    public ResponseEntity<Void> revokeAccessKey(@PathVariable Integer keyId){
 
         accessKeyService.revokeAccessKey(keyId);
 
         return ResponseEntity.noContent().build();
 
+    }
+
+    //Find access keys for a specific user
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<AccessKey>> findAccessKeysByUserId(@PathVariable Integer userId){
+        List<AccessKey> accessKeys = accessKeyService.findAccessKeysByUserId(userId);
+        return ResponseEntity.ok(accessKeys);
     }
 
 
