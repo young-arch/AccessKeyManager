@@ -1,6 +1,7 @@
 package accesskey.access.Service;
 
 import accesskey.access.Entity.AccessKey;
+import accesskey.access.Exceptions.AccessKeyNotFoundException;
 import accesskey.access.Repository.AccessKeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,13 @@ public class AccessKeyService{
 
     //Find the active access key for a specific user
     public AccessKey findActiveAccessKey(Integer userId){
-        return accessKeyRepository.findByUserIdAndStatus(userId, "ACTIVE");
+
+        AccessKey activeAccessKey = accessKeyRepository.findByUserIdAndStatus(userId, "ACTIVE");
+
+        if(activeAccessKey == null){
+            throw new AccessKeyNotFoundException("Active access key not found for user ID: " + userId);
+        }
+        return activeAccessKey;
     }
 
     //Update the status of an access key

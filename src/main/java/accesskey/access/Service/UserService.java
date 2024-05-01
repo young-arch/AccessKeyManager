@@ -1,6 +1,7 @@
 package accesskey.access.Service;
 
 import accesskey.access.Entity.User;
+import accesskey.access.Exceptions.UserNotFoundException;
 import accesskey.access.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +27,12 @@ public class UserService{
 
     //Find a user by email
     public User findUserByEmail(String email){
-        return userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
+        if(user == null){
+            throw new UserNotFoundException("The user with email " + email + " was not found");
+
+        }
+        return user;
     }
 
     //Update a user's password
@@ -38,6 +44,7 @@ public class UserService{
 
     //Check if a user exits by email
     public boolean userExists(String email){
+
         return userRepository.existsByEmail(email);
     }
 
