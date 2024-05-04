@@ -2,7 +2,14 @@ package accesskey.access.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.sql.ast.tree.expression.Collation;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -19,8 +26,9 @@ public class User{
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String role;
+    private Role role;
 
     @Column(nullable = false)
     private Boolean verified = false;
@@ -36,5 +44,15 @@ public class User{
         updatedAt = LocalDateTime.now();
     }
 
+    public Collection<? extends GrantedAuthority> getAuthorities(){
 
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("Role_" +role.name()));
+        return authorities;
+    }
+
+}
+enum Role{
+    SCHOOL_IT,
+    ADMIN
 }
