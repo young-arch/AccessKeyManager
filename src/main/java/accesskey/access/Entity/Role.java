@@ -1,7 +1,7 @@
-package accesskey.access.Entity;
+/*package accesskey.access.Entity;
 
 public enum Role {
 
     ADMIN,
     USER;
-}
+}**/

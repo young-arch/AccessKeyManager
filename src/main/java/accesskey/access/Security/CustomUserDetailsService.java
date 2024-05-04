@@ -31,14 +31,13 @@ public class CustomUserDetailsService implements UserDetailsService{
 
         }
 
-        //GrantedAuthority based on the user's role
-        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().name());
+
 
         //UserDetails implementation return
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .authorities(Collections.singleton(authority))
+                .roles(user.getRole())
                 .build();
     }
 
