@@ -19,8 +19,9 @@ public class AccessKey {
     @Column(nullable = false)
     private String key;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private AccessKeyStatus status;
 
     @Column(nullable = false)
     private LocalDateTime procurementDate;
@@ -41,5 +42,12 @@ public class AccessKey {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    //Access key Status values
+    public enum AccessKeyStatus{
+        ACTIVE,
+        EXPIRED,
+        REVOKED
     }
 }
