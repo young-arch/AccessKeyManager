@@ -4,6 +4,7 @@ import accesskey.access.Entity.User;
 import accesskey.access.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,14 +18,15 @@ public class UserController{
         this.userService = userService;
     }
 
-    //Create a new user
+    //Create a new user(Accessible to everyone)
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user){
         User newUser =  userService.createUser(user);
         return ResponseEntity.ok(newUser);
     }
 
-    //Find a user by email
+    //Find a user by email(Accessible to admin only)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{email}")
     public ResponseEntity<User> findUserByEmail(@PathVariable String email){
         User user = userService.findUserByEmail(email);
@@ -36,7 +38,8 @@ public class UserController{
         }
     }
 
-    //Update a user's password
+    //Update a user's password(Accessible to user only if they match the email)
+    @PreAuthorize("#email == authentication.principal.username")
     @PutMapping("/{email}/password")
     public ResponseEntity<Void> updatePassword(@PathVariable String email, @RequestBody String newPassword){
         userService.updatePassword(email, newPassword);
