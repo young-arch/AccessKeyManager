@@ -5,6 +5,7 @@ import accesskey.access.Service.AccessKeyService;
 import accesskey.access.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,14 +23,16 @@ public class AccessKeyController {
 
     }
 
-    //Create a new access key
+    //Create a new access key(Admin only)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<AccessKey> createAccessKey(@RequestBody AccessKey accessKey){
         AccessKey newAccesskey = accessKeyService.createAccessKey(accessKey);
         return ResponseEntity.ok(newAccesskey);
     }
 
-    //Find active access keys for a user
+    //Find active access keys for a user(School_IT and admin)
+    @PreAuthorize("hasAnyRole('ROLE_SCHOOL_IT', 'ROLE_ADMIN')")
     @GetMapping("/user/{userId}/active")
     public ResponseEntity<AccessKey> findActiveAccessKey(@PathVariable Integer userId){
 
@@ -48,7 +51,8 @@ public class AccessKeyController {
 
     }
 
-    //Find all expired access keys
+    //Find all expired access keys (Admin only)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/expired")
     public ResponseEntity<List<AccessKey>> findExpiredAccessKeys(){
 
@@ -57,7 +61,8 @@ public class AccessKeyController {
         return ResponseEntity.ok(expiredKeys);
     }
 
-    //Revoke an access key
+    //Revoke an access key (Admin only)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{keyId}/revoke")
     public ResponseEntity<Void> revokeAccessKey(@PathVariable Integer keyId){
 
@@ -67,7 +72,8 @@ public class AccessKeyController {
 
     }
 
-    //Find access keys for a specific user
+    //Find access keys for a specific user (School IT and Admin)
+    @PreAuthorize("hasAnyRole('ROLE_SCHOOL_IT', 'ROLE_ADMIN')")
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<AccessKey>> findAccessKeysByUserId(@PathVariable Integer userId){
         List<AccessKey> accessKeys = accessKeyService.findAccessKeysByUserId(userId);
