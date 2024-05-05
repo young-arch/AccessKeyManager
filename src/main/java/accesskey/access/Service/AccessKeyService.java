@@ -1,6 +1,7 @@
 package accesskey.access.Service;
 
 import accesskey.access.Entity.AccessKey;
+import accesskey.access.Entity.User;
 import accesskey.access.Exceptions.AccessKeyNotFoundException;
 import accesskey.access.Repository.AccessKeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,19 @@ public class AccessKeyService{
 
     //Find access keys by user ID
     public List<AccessKey> findAccessKeysByUserId(Integer userId){
+        //Check if current user is authorized to view access keys for this user ID
+        if(!isCurrentUserOrAdmin(userId)){
+            throw new SecurityException("Unauthorized: You can only view access keys for your own account or if you are an admin");
+        }
         return accessKeyRepository.findByUserId(userId);
     }
 
     //Find the active access key for a specific user
     public AccessKey findActiveAccessKey(Integer userId){
+        //Check if the current user is authorized to view access keys for this user ID
+        if(!isCurrentUserOrAdmin(userId)){
+            throw new SecurityException("Unauthorized: You can only view access keys which are ACTIVE for your own account or if you are an admin");
+        }
 
         AccessKey activeAccessKey = accessKeyRepository.findByUserIdAndStatus(userId, "ACTIVE");
 
@@ -77,11 +86,15 @@ public class AccessKeyService{
     private boolean isCurrentUserOrAdmin(Integer userId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null){
-            //Checks if the current user is userId or has admin role
-            boolean isCurrentUser = authentication.getName().equals(userService.findUserById(userId).getEmail());
+            //Get the current user's email
+            String currentUserEmail = authentication.getName();
+
+            //Check if the current user has admin role or owner of the account
             boolean isAdmin = authentication.getAuthorities().stream()
                     .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-            return isCurrentUser || isAdmin;
+            User currentUser = userService.findUserByEmail(currentUserEmail);
+            boolean isCurrentUser = currentUser.getId().equals(userId);
+            return isAdmin || isCurrentUser;
         }
         return false;
     }
