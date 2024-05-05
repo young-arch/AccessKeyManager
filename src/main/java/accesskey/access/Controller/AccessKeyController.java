@@ -80,6 +80,14 @@ public class AccessKeyController {
         return ResponseEntity.ok(accessKeys);
     }
 
+    //Update the status of an access key
+    @PutMapping("/{keyId}/status")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateAccessKeyStatus(@PathVariable Integer keyId, @RequestBody String newStatus){
+        accessKeyService.updateAccessKeyStatus(keyId, newStatus);
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 

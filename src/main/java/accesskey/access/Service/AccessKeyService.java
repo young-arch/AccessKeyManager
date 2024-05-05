@@ -25,7 +25,7 @@ public class AccessKeyService{
     //Create a new Access key
     public AccessKey createAccessKey(AccessKey accessKey){
         //Checks if the user has Admin role
-        if(!isUserAdmin()){
+        if(isUserAdmin()){
             throw new SecurityException("Unauthorized: User must have an admin role to create access keys");
         }
         return accessKeyRepository.save(accessKey);
@@ -34,7 +34,7 @@ public class AccessKeyService{
     //Find access keys by user ID
     public List<AccessKey> findAccessKeysByUserId(Integer userId){
         //Check if current user is authorized to view access keys for this user ID
-        if(!isCurrentUserOrAdmin(userId)){
+        if(isCurrentUserOrAdmin(userId)){
             throw new SecurityException("Unauthorized: You can only view access keys for your own account or if you are an admin");
         }
         return accessKeyRepository.findByUserId(userId);
@@ -43,7 +43,7 @@ public class AccessKeyService{
     //Find the active access key for a specific user
     public AccessKey findActiveAccessKey(Integer userId){
         //Check if the current user is authorized to view access keys for this user ID
-        if(!isCurrentUserOrAdmin(userId)){
+        if(isCurrentUserOrAdmin(userId)){
             throw new SecurityException("Unauthorized: You can only view access keys which are ACTIVE for your own account or if you are an admin");
         }
 
@@ -58,7 +58,7 @@ public class AccessKeyService{
     //Update the status of an access key
     public void updateAccessKeyStatus(Integer keyId, String newStatus){
         //Check if the use has admin role
-        if(!isUserAdmin()){
+        if(isUserAdmin()){
             throw new SecurityException("Unauthorized: User must have admin role to update access key status");
         }
         accessKeyRepository.updateStatusById(keyId, newStatus);
@@ -67,7 +67,7 @@ public class AccessKeyService{
     //Find and revoke an access key
     public void revokeAccessKey(Integer keyId){
         //Check if the user has admin role
-        if(!isUserAdmin()){
+        if(isUserAdmin()){
             throw new SecurityException("Unauthorized: User must have admin role to revoke access keys");
         }
         accessKeyRepository.updateStatusById(keyId, "REVOKED");
@@ -76,7 +76,7 @@ public class AccessKeyService{
     //Find all expired access keys
     public List<AccessKey> findExpiredAccessKeys(){
         //Check if the user has admin role
-        if(!isUserAdmin()){
+        if(isUserAdmin()){
             throw new SecurityException("Unauthorized: User must have admin role to view expired access keys");
         }
         return accessKeyRepository.findAllByExpiryDateBefore(LocalDateTime.now());
@@ -85,7 +85,7 @@ public class AccessKeyService{
     //Find access key by key string
     public AccessKey findAccessKeyByKey(String key){
         //Check if the user has admin role
-        if(!isUserAdmin()){
+        if(isUserAdmin()){
             throw new SecurityException("Unauthorized: User must have admin role to find access key by key");
         }
         return accessKeyRepository.findByKey(key);
@@ -94,8 +94,8 @@ public class AccessKeyService{
     //Methods for authorization checks
     private boolean isUserAdmin(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+        return authentication == null || authentication.getAuthorities().stream()
+                .noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
     }
 
     UserService userService;
@@ -110,9 +110,9 @@ public class AccessKeyService{
                     .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
             User currentUser = userService.findUserByEmail(currentUserEmail);
             boolean isCurrentUser = currentUser.getId().equals(userId);
-            return isAdmin || isCurrentUser;
+            return !isAdmin && !isCurrentUser;
         }
-        return false;
+        return true;
     }
 
 
