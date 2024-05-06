@@ -13,10 +13,10 @@ public interface AccessKeyRepository extends JpaRepository<AccessKey, Integer> {
     List<AccessKey> findByUserId(Integer userId);
 
     //Finds all the active access key for a specific user
-    AccessKey findByUserIdAndStatus(Integer userId, String status);
+    AccessKey findByUserIdAndStatus(Integer user_id, AccessKey.AccessKeyStatus status);
 
     //Checks if there is an active key for a specific key
-    boolean existsByUserIdAndStatus(Integer userId, String status);
+    boolean existsByUserIdAndStatus(Integer user_id, AccessKey.AccessKeyStatus status);
 
     //Update the status of an access key by ID
     void updateStatusById(Integer id, String newStatus );

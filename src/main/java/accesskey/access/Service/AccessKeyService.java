@@ -47,7 +47,7 @@ public class AccessKeyService{
             throw new SecurityException("Unauthorized: You can only view access keys which are ACTIVE for your own account or if you are an admin");
         }
 
-        AccessKey activeAccessKey = accessKeyRepository.findByUserIdAndStatus(userId, "ACTIVE");
+        AccessKey activeAccessKey = accessKeyRepository.findByUserIdAndStatus(userId, AccessKey.AccessKeyStatus.valueOf("ACTIVE"));
 
         if(activeAccessKey == null){
             throw new AccessKeyNotFoundException("Active access key not found for user ID: " + userId);
