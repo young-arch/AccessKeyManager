@@ -1,7 +1,9 @@
 package accesskey.access.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.sql.ast.tree.expression.Collation;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,8 +41,24 @@ public class User{
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    @Setter
+    @Getter
+    @Column
+    private String resetToken;
+
+    @Setter
+    @Getter
+    @Column
+    private LocalDateTime tokenExpirationTime;
+
     @PreUpdate
     protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PrePersist
+    protected void onCreate(){
+        createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
