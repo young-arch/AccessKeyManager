@@ -79,8 +79,18 @@ public class UserService{
             throw new UserNotFoundException("User with email " + email + " not found.");
         }
 
+        user.setResetToken(token);
+        user.setTokenExpirationTime(LocalDateTime.now().plusHours(1));
+        userRepository.save(user);
 
     }
+
+    public String generateResetLink(String token){
+
+        return "http://localhost:8080/api/users/password/reset/confirm?token=" + token;
+    }
+
+
 
 
 }
