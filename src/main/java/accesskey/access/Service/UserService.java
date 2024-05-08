@@ -58,12 +58,18 @@ public class UserService{
     //Initiate password Reset
     public void initiatePasswordReset(String email){
         User user = findUserByEmail(email);
+
         String token = generateResetToken(); //Generate a unique token;
+
         saveResetToken(email, token);
 
-        //Send password reset email
+        //Generate the password reset email
         String resetLink = generateResetLink(token);
+
+        //Send the password reset email
         emailService.sendEmail(email, "Password Reset Request", "To reset your password, please click the link: " + resetLink);
+
+
 
     }
 
@@ -89,6 +95,39 @@ public class UserService{
 
         return "http://localhost:8080/api/users/password/reset/confirm?token=" + token;
     }
+
+    public void resetPassword(String token, String newPassword){
+        //Verify the token and the associated user
+        User user = verifyToken(token);
+
+        //Update user's password
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+
+        //Notification to the user for password change
+        emailService.sendEmail(user.getEmail(), "Password Reset Successful", "Your password has been reset successfully.");
+    }
+
+    public User verifyToken(String token){
+        //Find the user by reset token
+        User user = userRepository.findByResetToken(token);
+
+        if(user == null){
+            throw new UserNotFoundException("Invalid token or Expired token");
+        }
+
+        //Check if the token has expired
+        LocalDateTime currentTime = LocalDateTime.now();
+        if(user.getTokenExpirationTime().isBefore(currentTime)){
+            throw new UserNotFoundException("Token has expired");
+        }
+        return user;
+
+    }
+
+
+
 
 
 

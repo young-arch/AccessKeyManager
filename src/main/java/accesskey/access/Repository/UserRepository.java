@@ -13,5 +13,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     void updatePasswordByEmail(String email, String newPassword);
 
+    User findByResetToken(String token);
+
 
 }
