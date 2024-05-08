@@ -12,11 +12,22 @@ public class UserService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Autowired
-    public UserService(UserRepository userRepository,PasswordEncoder passwordEncoder){
+    public UserService(UserRepository userRepository,PasswordEncoder passwordEncoder, EmailService emailService){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
+    }
+
+    //Update a user's password
+    public void updatePassword(String email, String newPassword){
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        userRepository.updatePasswordByEmail(email, encodedPassword);
+
+        //Email notification for password reset
+        emailService.sendEmail(email, "Password Reset", "Your password has been reset successfully.");
     }
 
     //Create a new user
@@ -33,13 +44,6 @@ public class UserService{
 
         }
         return user;
-    }
-
-    //Update a user's password
-    public void updatePassword(String email, String newPassword){
-
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        userRepository.updatePasswordByEmail(email, encodedPassword);
     }
 
     //Check if a user exits by email
