@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Service
 public class UserService{
 
@@ -61,6 +64,20 @@ public class UserService{
         //Send password reset email
         String resetLink = generateResetLink(token);
         emailService.sendEmail(email, "Password Reset Request", "To reset your password, please click the link: " + resetLink);
+
+    }
+
+    public String generateResetToken(){
+        //Generate a Unique token using UUID
+        return UUID.randomUUID().toString();
+    }
+
+    public void saveResetToken(String email, String token){
+        //Find the user by email
+        User user = findUserByEmail(email);
+        if(user == null){
+            throw new UserNotFoundException("User with email " + email + " not found.");
+        }
 
 
     }
