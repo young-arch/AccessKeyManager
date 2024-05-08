@@ -46,4 +46,12 @@ public class UserController{
         return ResponseEntity.noContent().build();
     }
 
+    //Initiate Password Reset
+    @PostMapping("/password/reset")
+    public ResponseEntity<Void> initiatePasswordReset(@RequestBody String email){
+        userService.initiatePasswordReset(email);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }
