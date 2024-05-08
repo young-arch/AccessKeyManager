@@ -52,5 +52,18 @@ public class UserService{
         return userRepository.existsByEmail(email);
     }
 
+    //Initiate password Reset
+    public void initiatePasswordReset(String email){
+        User user = findUserByEmail(email);
+        String token = generateResetToken(); //Generate a unique token;
+        saveResetToken(email, token);
+
+        //Send password reset email
+        String resetLink = generateResetLink(token);
+        emailService.sendEmail(email, "Password Reset Request", "To reset your password, please click the link: " + resetLink);
+
+
+    }
+
 
 }
