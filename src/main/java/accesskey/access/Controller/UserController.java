@@ -55,7 +55,8 @@ public class UserController{
 
     //Password Reset
     public ResponseEntity<Void> resetPassword(@RequestParam("token") String token, @RequestParam("password") String newPassword){
-        userService.resetPassword()
+        userService.resetPassword(token, newPassword);
+        return ResponseEntity.noContent().build();
     }
 
 
