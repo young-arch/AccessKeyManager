@@ -55,6 +55,20 @@ public class UserService{
         return userRepository.existsByEmail(email);
     }
 
+    //Login user
+    public User loginUser(String email, String password){
+        //Find user by email
+        User user = userRepository.findUserByEmail(email);
+        if(user == null){
+            throw new UserNotFoundException("User with email " + email + " not found.");
+        }
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new InvalidCredentialsException("Invalid password");
+        }
+        return user;
+    }
+
+
     //Initiate password Reset
     public void initiatePasswordReset(String email){
         User user = findUserByEmail(email);
@@ -86,7 +100,7 @@ public class UserService{
         }
 
         user.setResetToken(token);
-        user.setTokenExpirationTime(LocalDateTime.now().plusHours(1));
+        user.setTokenExpirationTime(LocalDateTime.now().plusHours(5));
         userRepository.save(user);
 
     }
