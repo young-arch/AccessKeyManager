@@ -1,15 +1,22 @@
 package accesskey.access.Controller;
 
 import accesskey.access.Entity.User;
+import accesskey.access.Exceptions.UserNotFoundException;
 import accesskey.access.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 @RestController
 @RequestMapping("api/users")
 public class UserController{
+    private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
+
 
     private final UserService userService;
 
@@ -21,20 +28,29 @@ public class UserController{
     //Create a new user(Accessible to everyone)
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user){
-        User newUser =  userService.createUser(user);
-        return ResponseEntity.ok(newUser);
+        try {
+
+            User newUser = userService.createUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+        }catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error creating user: " +e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
     }
 
     //Find a user by email(Accessible to admin only)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{email}")
     public ResponseEntity<User> findUserByEmail(@PathVariable String email){
-        User user = userService.findUserByEmail(email);
-        if(user != null){
+        try{
+            User user = userService.findUserByEmail(email);
             return ResponseEntity.ok(user);
-        }
-        else{
-            return ResponseEntity.notFound().build();
+        }catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }catch (Exception e){
+            LOGGER.log(Level.SEVERE, "Error Finding user by email: " + e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
@@ -42,28 +58,44 @@ public class UserController{
     @PreAuthorize("#email == authentication.principal.username")
     @PutMapping("/{email}/password")
     public ResponseEntity<Void> updatePassword(@PathVariable String email, @RequestBody String newPassword){
-        userService.updatePassword(email, newPassword);
-        return ResponseEntity.noContent().build();
+        try {
+            userService.updatePassword(email, newPassword);
+            return ResponseEntity.noContent().build();
+        }catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }catch (Exception e){
+            LOGGER.log(Level.SEVERE, "Error updating password: " + e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
-    //Initiate Password Reset
+    //Initiate Password Reset(Accessible to everyone)
     @PostMapping("/password/reset")
     public ResponseEntity<Void> initiatePasswordReset(@RequestBody String email){
+        try {
         userService.initiatePasswordReset(email);
         return ResponseEntity.noContent().build();
+        }catch(UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }catch (Exception e){
+            LOGGER.log(Level.SEVERE, "Error initiating password reset: " + e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
-    //Reset Password
+    //Reset Password(Accessible to everyone)
     @PostMapping("/password/reset/confirm")
     public ResponseEntity<Void> resetPassword(@RequestParam("token") String token, @RequestParam("password") String newPassword){
-        userService.resetPassword(token, newPassword);
-        return ResponseEntity.noContent().build();
+        try {
+            userService.resetPassword(token, newPassword);
+            return ResponseEntity.noContent().build();
+        }catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }catch (Exception e){
+            LOGGER.log(Level.SEVERE, "Error resetting password: " + e.getMessage(),e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
-
-
-
-
-
 
 
 }
