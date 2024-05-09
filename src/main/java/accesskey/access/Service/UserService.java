@@ -1,6 +1,7 @@
 package accesskey.access.Service;
 
 import accesskey.access.Entity.User;
+import accesskey.access.Exceptions.InvalidCredentialsException;
 import accesskey.access.Exceptions.UserNotFoundException;
 import accesskey.access.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class UserService{
     //Login user
     public User loginUser(String email, String password){
         //Find user by email
-        User user = userRepository.findUserByEmail(email);
+        User user = findUserByEmail(email);
         if(user == null){
             throw new UserNotFoundException("User with email " + email + " not found.");
         }
