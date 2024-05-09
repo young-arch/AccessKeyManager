@@ -53,11 +53,15 @@ public class UserController{
         return ResponseEntity.noContent().build();
     }
 
-    //Password Reset
+    //Reset Password
+    @PostMapping("/password/reset/confirm")
     public ResponseEntity<Void> resetPassword(@RequestParam("token") String token, @RequestParam("password") String newPassword){
         userService.resetPassword(token, newPassword);
         return ResponseEntity.noContent().build();
     }
+
+
+
 
 
 
