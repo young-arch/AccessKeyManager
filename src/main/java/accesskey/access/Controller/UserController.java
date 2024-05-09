@@ -97,5 +97,10 @@ public class UserController{
         }
     }
 
+    //User Login(Accessible to everyone)
+    @PostMapping("/login")
+    public ResponseEntity<User> loginUser(@RequestBody UserLoginRequest userLoginRequest)
+
+
 
 }
