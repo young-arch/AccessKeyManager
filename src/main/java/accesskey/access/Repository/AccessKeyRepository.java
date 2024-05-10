@@ -27,7 +27,7 @@ public interface AccessKeyRepository extends JpaRepository<AccessKey, Integer> {
     //Find the access key by key String
     AccessKey findByKey(String key);
 
-    //Retrieve all access keys
+    //Retrieve all access key
     List<AccessKey> findAll();
 
 }

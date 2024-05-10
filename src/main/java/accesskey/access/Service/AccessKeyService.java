@@ -3,6 +3,7 @@ package accesskey.access.Service;
 import accesskey.access.Entity.AccessKey;
 import accesskey.access.Entity.User;
 import accesskey.access.Exceptions.AccessKeyNotFoundException;
+import accesskey.access.Exceptions.InvalidRequestException;
 import accesskey.access.Repository.AccessKeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -26,7 +27,7 @@ public class AccessKeyService{
     public AccessKey createAccessKey(AccessKey accessKey){
         //Checks if the user has Admin role
         if(isUserAdmin()){
-            throw new SecurityException("Unauthorized: User must have an admin role to create access keys");
+            throw new InvalidRequestException("Unauthorized: User must have an admin role to create access keys");
         }
         return accessKeyRepository.save(accessKey);
     }
@@ -94,6 +95,11 @@ public class AccessKeyService{
     //Find all access keys
     public List<AccessKey> findAllAccessKeys(){
         return accessKeyRepository.findAll();
+    }
+
+    //Check if there is an active key for a specific user
+    public boolean existsActiveKeyForUser(Integer userId){
+        return accessKeyRepository.existsByUserIdAndStatus(userId, AccessKey.AccessKeyStatus.ACTIVE);
     }
 
     //Methods for authorization checks
