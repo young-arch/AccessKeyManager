@@ -87,11 +87,11 @@ public class AccessKeyController {
         return ResponseEntity.noContent().build();
     }
 
-    //Find all access keys
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //Find all access keys with details
+    @PreAuthorize("hasAnyRole('ROLE_SCHOOL_IT', 'ROLE_ADMIN')")
     @GetMapping("/all")
-    public ResponseEntity<List<AccessKey>> findAllAccessKeys(){
-        List<AccessKey> accessKeys = accessKeyService.findAllAccessKeys();
+    public ResponseEntity<List<AccessKey>> findAllAccessKeysWithDetails(){
+        List<AccessKey> accessKeys = accessKeyService.findAllAccessKeysWithDetails();
         return ResponseEntity.ok(accessKeys);
     }
 

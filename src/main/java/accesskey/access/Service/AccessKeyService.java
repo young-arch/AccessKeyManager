@@ -93,7 +93,7 @@ public class AccessKeyService{
     }
 
     //Find all access keys
-    public List<AccessKey> findAllAccessKeys(){
+    public List<AccessKey> findAllAccessKeysWithDetails(){
         return accessKeyRepository.findAll();
     }
 
