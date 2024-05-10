@@ -24,7 +24,7 @@ public class AccessKeyController {
 
     //Create a new access key(Admin only)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<AccessKey> createAccessKey(@RequestBody AccessKey accessKey){
         AccessKey newAccesskey = accessKeyService.createAccessKey(accessKey);
         return ResponseEntity.ok(newAccesskey);
@@ -86,6 +86,24 @@ public class AccessKeyController {
         accessKeyService.updateAccessKeyStatus(keyId, newStatus);
         return ResponseEntity.noContent().build();
     }
+
+    //Find all access keys
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/all")
+    public ResponseEntity<List<AccessKey>> findAllAccessKeys(){
+        List<AccessKey> accessKeys = accessKeyService.findAllAccessKeys();
+        return ResponseEntity.ok(accessKeys);
+    }
+
+    //Check if there is an active key for a specific user
+    @PreAuthorize("hasAnyRole('ROLE_SCHOOL', 'ROLE_ADMIN')")
+    @GetMapping("/user/{userId}/active/check")
+    public ResponseEntity<Boolean> existsActiveKeyForUser(@PathVariable Integer userId){
+        boolean existsActiveKey = accessKeyService.existsActiveKeyForUser(userId);
+        return ResponseEntity.ok(existsActiveKey);
+    }
+
+
 
 
 
