@@ -2,7 +2,6 @@ package accesskey.access.Controller;
 
 import accesskey.access.DTO.UserLoginRequest;
 import accesskey.access.Entity.User;
-import accesskey.access.Exceptions.InvalidCredentialsException;
 import accesskey.access.Exceptions.UserNotFoundException;
 import accesskey.access.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +104,7 @@ public class UserController{
         try{
             User user = userService.loginUser(userLoginRequest.getEmail(), userLoginRequest.getPassword());
             return ResponseEntity.ok(user);
-        }catch (UserNotFoundException | InvalidCredentialsException e){
+        }catch (UserNotFoundException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }catch (Exception e){
             LOGGER.log(Level.SEVERE, "Error logging in user: " + e.getMessage(), e);

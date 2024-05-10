@@ -91,6 +91,11 @@ public class AccessKeyService{
         return accessKeyRepository.findByKey(key);
     }
 
+    //Find all access keys
+    public List<AccessKey> findAllAccessKeys(){
+        return accessKeyRepository.findAll();
+    }
+
     //Methods for authorization checks
     private boolean isUserAdmin(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
