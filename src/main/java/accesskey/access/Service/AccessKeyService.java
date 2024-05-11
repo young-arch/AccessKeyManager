@@ -26,8 +26,12 @@ public class AccessKeyService{
     //Create a new Access key
     public AccessKey createAccessKey(AccessKey accessKey){
         //Checks if the user has Admin role
+        Integer userId = accessKey.getId();
         if(isUserAdmin()){
             throw new InvalidRequestException("Unauthorized: User must have an admin role to create access keys");
+        }
+        if (existsActiveKeyForUser(userId)) {
+            throw new IllegalStateException("User already has an active access key");
         }
         return accessKeyRepository.save(accessKey);
     }
