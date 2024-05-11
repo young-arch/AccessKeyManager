@@ -66,7 +66,10 @@ public class AccessKeyService{
         if(isUserAdmin()){
             throw new SecurityException("Unauthorized: User must have admin role to update access key status");
         }
-        accessKeyRepository.updateStatusById(keyId, newStatus);
+        AccessKey accessKey = accessKeyRepository.findById(keyId)
+                .orElseThrow(() -> new AccessKeyNotFoundException("Access key not found with id: " + keyId));
+        accessKey.setStatus(AccessKey.AccessKeyStatus.valueOf(newStatus));
+        accessKeyRepository.save(accessKey);
     }
 
     //Find and revoke an access key
@@ -75,7 +78,7 @@ public class AccessKeyService{
         if(isUserAdmin()){
             throw new SecurityException("Unauthorized: User must have admin role to revoke access keys");
         }
-        accessKeyRepository.updateStatusById(keyId, "REVOKED");
+        accessKeyRepository.updateStatusById(keyId, AccessKey.AccessKeyStatus.valueOf("REVOKED"));
     }
 
     //Find all expired access keys

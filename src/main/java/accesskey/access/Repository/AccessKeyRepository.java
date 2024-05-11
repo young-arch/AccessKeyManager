@@ -2,6 +2,8 @@ package accesskey.access.Repository;
 
 import accesskey.access.Entity.AccessKey;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -19,7 +21,9 @@ public interface AccessKeyRepository extends JpaRepository<AccessKey, Integer> {
     boolean existsByUserIdAndStatus(Integer user_id, AccessKey.AccessKeyStatus status);
 
     //Update the status of an access key by ID
-    void updateStatusById(Integer id, String newStatus );
+    @Modifying
+    @Query("UPDATE AccessKey a SET a.status = ?2 WHERE a.id = ?1")
+    void updateStatusById(Integer id, AccessKey.AccessKeyStatus newStatus );
 
     //Find all keys that have expired
     List<AccessKey> findAllByExpiryDateBefore(LocalDateTime now);
