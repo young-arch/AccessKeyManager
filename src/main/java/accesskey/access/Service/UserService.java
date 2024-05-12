@@ -1,5 +1,6 @@
 package accesskey.access.Service;
 
+import accesskey.access.Entity.Role;
 import accesskey.access.Entity.User;
 import accesskey.access.Exceptions.InvalidCredentialsException;
 import accesskey.access.Exceptions.UserNotFoundException;
@@ -36,7 +37,18 @@ public class UserService{
 
     //Create a new user
     public User createUser(User user){
+        //Set a default role if the role is not provided
+        if(user.getRole() == null){
+            user.setRole(accesskey.access.Entity.Role.SCHOOL_IT); //Default role as SCHOOL_IT
+        }else{
+            if(user.getRole() != accesskey.access.Entity.Role.SCHOOL_IT && user.getRole() != accesskey.access.Entity.Role.ADMIN){
+            //Validate the provided role
+                throw new IllegalArgumentException("Invalid role. Allowed roles are School_IT and Admin");
+            }
+        }
+        //Encode password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        //Save the user
         return userRepository.save(user);
     }
 
@@ -139,6 +151,11 @@ public class UserService{
         }
         return user;
 
+    }
+
+    enum Role{
+        SCHOOL_IT,
+        ADMIN
     }
 
 

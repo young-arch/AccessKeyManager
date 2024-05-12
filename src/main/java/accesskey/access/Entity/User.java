@@ -29,7 +29,7 @@ public class User{
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    public Role role;
 
     @Column(nullable = false)
     private Boolean verified = false;
@@ -69,7 +69,4 @@ public class User{
     }
 
 }
-enum Role{
-    SCHOOL_IT,
-    ADMIN
-}
+
