@@ -48,6 +48,16 @@ public class UserService{
         }
         //Encode password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        //Generate a verification token
+        String verificationToken = generateResetToken();
+        user.setResetToken(verificationToken);
+        user.setTokenExpirationTime(LocalDateTime.now().plusHours(8)); //Token is valid for 8 hours
+
+        //Send Verification email
+        String verificationLink = generateVerificationLink(verificationToken);
+        emailService.sendEmail(user.getEmail(), "Account Verification", "Please verify your account by clicking the Verification link: " + verificationLink);
+
         //Save the user
         return userRepository.save(user);
     }
@@ -153,10 +163,26 @@ public class UserService{
 
     }
 
-    enum Role{
-        SCHOOL_IT,
-        ADMIN
+    //Generate verification token
+    private String generateVerificationToken(String token){
+        return UUID.randomUUID().toString();
     }
+
+    //Generate verification link
+    private String generateVerificationLink(String token){
+        return "http://localhost:8080/api/users/verify?token=" + token;
+    }
+
+    //Verify user's email
+    public void verifyUser(String token){
+        User user = verifyToken(token);
+        user.setVerified(true);
+        user.setResetToken(null);
+        user.setTokenExpirationTime(null);
+        userRepository.save(user);
+    }
+
+
 
 
 
