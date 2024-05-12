@@ -27,9 +27,12 @@ public class User{
     @Column(nullable = false)
     private String password;
 
+    @Setter
+    @Getter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     public Role role;
+
 
     @Column(nullable = false)
     private Boolean verified = false;
