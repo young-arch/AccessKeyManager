@@ -163,8 +163,38 @@ public class UserService{
 
     }
 
+    //Initiate User Verification
+    public void initiateVerification(String email){
+        User user = findUserByEmail(email);
+
+        String token = generateVerificationToken();
+
+        saveVerificationToken(email, token);
+
+        //Generate the verification email
+        String verificationLink = generateVerificationLink(token);
+
+        //Send the verification email
+        emailService.sendEmail(email, "Email Verification", "To verify your email, please click the link: " + verificationLink);
+
+    }
+
+    public void saveVerificationToken(String email, String token) {
+        // Find the user by email
+        User user = findUserByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User with email " + email + " not found.");
+        }
+        user.setResetToken(token);
+        user.setTokenExpirationTime(LocalDateTime.now().plusHours(7)); // Token valid for 7 hours
+        userRepository.save(user);
+    }
+
+
+
+
     //Generate verification token
-    private String generateVerificationToken(String token){
+    private String generateVerificationToken(){
         return UUID.randomUUID().toString();
     }
 
@@ -174,12 +204,15 @@ public class UserService{
     }
 
     //Verify user's email
-    public void verifyUser(String token){
+    public void confirmVerification(String token){
+        //verify token and the associated user
         User user = verifyToken(token);
+
+        //MArk user as verified
         user.setVerified(true);
-        user.setResetToken(null);
-        user.setTokenExpirationTime(null);
         userRepository.save(user);
+
+        emailService.sendEmail(user.getEmail(), "Email Verification Successful", "Your email has been verified successfully");
     }
 
 

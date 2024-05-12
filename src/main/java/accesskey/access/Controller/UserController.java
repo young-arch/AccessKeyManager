@@ -113,6 +113,34 @@ public class UserController{
 
     }
 
+    //Initiate User Verification(Accessible to everyone)
+    @PostMapping("/verify")
+    public ResponseEntity<Void> initiateVerification(@RequestBody String email){
+        try {
+            userService.initiateVerification(email);
+            return ResponseEntity.noContent().build();
+        }catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }catch (Exception e){
+            LOGGER.log(Level.SEVERE, "Error initiating verification: " + e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    //Confirm User Verification
+    @GetMapping("/verify/confirm")
+    public ResponseEntity<Void> confirmVerification(@RequestParam("token") String token){
+        try {
+            userService.confirmVerification(token);
+            return ResponseEntity.noContent().build();
+        }catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }catch (Exception e){
+            LOGGER.log(Level.SEVERE, "Error confirming verification: " + e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
 
 
 }
