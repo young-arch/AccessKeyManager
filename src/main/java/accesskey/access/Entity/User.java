@@ -51,7 +51,20 @@ public class User{
     @Setter
     @Getter
     @Column
-    private LocalDateTime tokenExpirationTime;
+    private LocalDateTime resetTokenExpirationTime;
+
+    @Setter
+    @Getter
+    @Column
+    private String verificationToken;
+
+
+    @Setter
+    @Getter
+    @Column
+    private LocalDateTime verificationTokenExpirationTime;
+
+
 
     @PreUpdate
     protected void onUpdate() {
@@ -70,6 +83,7 @@ public class User{
         authorities.add(new SimpleGrantedAuthority("Role_" +role.name()));
         return authorities;
     }
+
 
 }
 

@@ -138,6 +138,7 @@ public class UserController{
         }catch (Exception e){
             LOGGER.log(Level.SEVERE, "Error confirming verification: " + e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
         }
     }
 

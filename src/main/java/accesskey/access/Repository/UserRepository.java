@@ -20,7 +20,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("UPDATE User u SET u.password = :newPassword WHERE u.email = :email")
     void updatePasswordByEmail(@Param("email") String email, @Param("newPassword") String newPassword);
 
-    User findByResetToken(String token);
+    User findByResetToken(String resetToken);
+
+    User findByVerificationToken(String verificationToken);
 
 
 }

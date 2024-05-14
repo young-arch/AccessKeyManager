@@ -49,9 +49,9 @@ public class UserService{
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         //Generate a verification token
-        String verificationToken = generateResetToken();
-        user.setResetToken(verificationToken);
-        user.setTokenExpirationTime(LocalDateTime.now().plusHours(8)); //Token is valid for 8 hours
+        String verificationToken = generateVerificationToken();
+        user.setVerificationToken(verificationToken);
+        user.setVerificationTokenExpirationTime(LocalDateTime.now().plusHours(8)); //Token is valid for 8 hours
 
         //Send Verification email
         String verificationLink = generateVerificationLink(verificationToken);
@@ -100,7 +100,7 @@ public class UserService{
         saveResetToken(email, token);
 
         //Generate the password reset email
-        String resetLink = generateResetLink(token);
+        String  resetLink = generateResetLink(token);
 
         //Send the password reset email
         emailService.sendEmail(email, "Password Reset Request", "To reset your password, please click the link: " + resetLink);
@@ -122,7 +122,7 @@ public class UserService{
         }
 
         user.setResetToken(token);
-        user.setTokenExpirationTime(LocalDateTime.now().plusHours(5));
+        user.setResetTokenExpirationTime(LocalDateTime.now().plusHours(5));
         userRepository.save(user);
 
     }
@@ -134,7 +134,7 @@ public class UserService{
 
     public void resetPassword(String token, String newPassword){
         //Verify the token and the associated user
-        User user = verifyToken(token);
+        User user = verifyResetToken(token);
 
         //Update user's password
         String encodedPassword = passwordEncoder.encode(newPassword);
@@ -145,7 +145,7 @@ public class UserService{
         emailService.sendEmail(user.getEmail(), "Password Reset Successful", "Your password has been reset successfully.");
     }
 
-    public User verifyToken(String token){
+    public User verifyResetToken(String token){
         //Find the user by reset token
         User user = userRepository.findByResetToken(token);
 
@@ -155,7 +155,7 @@ public class UserService{
 
         //Check if the token has expired
         LocalDateTime currentTime = LocalDateTime.now();
-        if(user.getTokenExpirationTime().isBefore(currentTime)){
+        if(user.getResetTokenExpirationTime().isBefore(currentTime)){
             throw new UserNotFoundException("Token has expired");
         }
         return user;
@@ -166,11 +166,13 @@ public class UserService{
     public void initiateVerification(String email){
         User user = findUserByEmail(email);
 
+       //Generate a verification token
         String token = generateVerificationToken();
 
+       //Save it
         saveVerificationToken(email, token);
 
-        //Generate the verification email
+        //Generate the verification link
         String verificationLink = generateVerificationLink(token);
 
         //Send the verification email
@@ -184,8 +186,8 @@ public class UserService{
         if (user == null) {
             throw new UserNotFoundException("User with email " + email + " not found.");
         }
-        user.setResetToken(token);
-        user.setTokenExpirationTime(LocalDateTime.now().plusHours(7)); // Token valid for 7 hours
+        user.setVerificationToken(token);
+        user.setVerificationTokenExpirationTime(LocalDateTime.now().plusHours(7)); // Token valid for 7 hours
         userRepository.save(user);
     }
 
@@ -199,19 +201,35 @@ public class UserService{
 
     //Generate verification link
     private String generateVerificationLink(String token){
-        return "http://localhost:8080/api/users/verify?token=" + token;
+        return "http://localhost:8080/api/users/verify/confirm?token=" + token;
     }
 
     //Verify user's email
     public void confirmVerification(String token){
         //verify token and the associated user
-        User user = verifyToken(token);
+        User user = verifyVerificationToken(token);
 
         //MArk user as verified
         user.setVerified(true);
         userRepository.save(user);
 
         emailService.sendEmail(user.getEmail(), "Email Verification Successful", "Your email has been verified successfully");
+    }
+
+    public User verifyVerificationToken(String token){
+        //Find user by verification token
+        User user = userRepository.findByVerificationToken(token);
+
+        if(user == null){
+            throw new UserNotFoundException("Invalid token or expired token");
+        }
+
+        //Check if token has expired
+        LocalDateTime currentTime = LocalDateTime.now();
+        if (user.getVerificationTokenExpirationTime().isBefore(currentTime)){
+            throw new UserNotFoundException("Token has expired");
+        }
+        return user;
     }
 
 
