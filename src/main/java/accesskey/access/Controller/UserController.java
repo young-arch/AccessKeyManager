@@ -142,6 +142,21 @@ public class UserController{
         }
     }
 
+    //Delete a user by email (Accessible to admin only)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/{email}")
+    public ResponseEntity<Void> deleteUserByEmail(@PathVariable String email){
+
+        try{
+            userService.deleteUserByEmail(email);
+            return ResponseEntity.noContent().build();
+        }catch(Exception e){
+            LOGGER.log(Level.SEVERE, "Error deleting user by email: " + e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+
 
 
 }
