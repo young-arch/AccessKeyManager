@@ -232,6 +232,16 @@ public class UserService{
         return user;
     }
 
+    //Delete a user email
+    public void deleteUserByEmail(String email){
+        User user = userRepository.findByEmail(email);
+        if(user == null){
+            throw new UserNotFoundException("User with email " + email + " not found.");
+        }
+        userRepository.delete(user);
+    }
+
+
 
 
 
