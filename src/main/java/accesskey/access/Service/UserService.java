@@ -1,6 +1,5 @@
 package accesskey.access.Service;
 
-import accesskey.access.Entity.Role;
 import accesskey.access.Entity.User;
 import accesskey.access.Exceptions.InvalidCredentialsException;
 import accesskey.access.Exceptions.UserNotFoundException;
@@ -214,11 +213,6 @@ public class UserService{
 
         emailService.sendEmail(user.getEmail(), "Email Verification Successful", "Your email has been verified successfully");
     }
-
-
-
-
-
 
 
 
