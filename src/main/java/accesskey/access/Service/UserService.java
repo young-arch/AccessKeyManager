@@ -91,71 +91,71 @@ public class UserService{
     }
 
 
-    //Initiate password Reset
+    //Initiate password Reset using OTP
     public void initiatePasswordReset(String email){
         User user = findUserByEmail(email);
 
-        String token = generateResetToken(); //Generate a unique token;
+        if (user == null){
+            throw new UserNotFoundException("User with email " + email + " not found.");
+        }
 
-        saveResetToken(email, token);
+        String otp = generateOTP(); //Generate a unique OTP;
 
-        //Generate the password reset email
-        String  resetLink = generateResetLink(token);
+        saveOTP(email, otp);
+
 
         //Send the password reset email
-        emailService.sendEmail(email, "Password Reset Request", "To reset your password, please click the link: " + resetLink);
+        emailService.sendEmail(email, "Password Reset Request", "Your OTP for password reset is: " + otp);
 
 
 
     }
 
-    public String generateResetToken(){
-        //Generate a Unique token using UUID
-        return UUID.randomUUID().toString();
+    public String generateOTP(){
+        //Generate a 6-digit OTP
+        return String.valueOf((int) (Math.random() * 900000) + 100000);
     }
 
-    public void saveResetToken(String email, String token){
+    public void saveOTP(String email, String otp){
         //Find the user by email
         User user = findUserByEmail(email);
         if(user == null){
             throw new UserNotFoundException("User with email " + email + " not found.");
         }
 
-        user.setResetToken(token);
-        user.setResetTokenExpirationTime(LocalDateTime.now().plusHours(5));
+        user.setOtp(otp);
+        user.setOtpExpirationTime(LocalDateTime.now().plusMinutes(20));// OTP is valid for 10 minutes
         userRepository.save(user);
 
     }
 
-    public String generateResetLink(String token){
 
-        return "http://localhost:8080/api/users/password/reset/confirm?token=" + token;
-    }
-
-    public void resetPassword(String token, String newPassword){
+    public void resetPasswordWithOTP(String otp, String newPassword){
         //Verify the token and the associated user
-        User user = verifyResetToken(token);
+        User user = verifyOTP(otp);
 
         //Update user's password
         String encodedPassword = passwordEncoder.encode(newPassword);
         user.setPassword(encodedPassword);
+        user.setOtp(null); //Clear the OTP
+        user.setOtpExpirationTime(null); //Clear the OTP expiration time
         userRepository.save(user);
 
         //Notification to the user for password change
         emailService.sendEmail(user.getEmail(), "Password Reset Successful", "Your password has been reset successfully.");
     }
 
-    public User verifyResetToken(String token){
-        //Find the user by reset token
-        User user = userRepository.findByResetToken(token);
+    public User verifyOTP(String otp){
+        //Find the user by OTP
+        User user = userRepository.findByOtp(otp);
 
         if(user == null){
             throw new UserNotFoundException("Invalid token or Expired token");
         }
 
-        //Check if the token has expired
+        //Check if the OTP has expired
         LocalDateTime currentTime = LocalDateTime.now();
-        if(user.getResetTokenExpirationTime().isBefore(currentTime)){
+        if(user.getOtpExpirationTime().isBefore(currentTime)){
             throw new UserNotFoundException("Token has expired");
         }
         return user;
@@ -240,9 +240,5 @@ public class UserService{
         }
         userRepository.delete(user);
     }
-
-
-
-
 
 }

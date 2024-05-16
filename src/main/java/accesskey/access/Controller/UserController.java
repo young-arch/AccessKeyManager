@@ -70,12 +70,14 @@ public class UserController{
         }
     }
 
+
     //Initiate Password Reset(Accessible to everyone)
-    @PostMapping("/password/reset")
+    @PostMapping("/password/resets")
     public ResponseEntity<Void> initiatePasswordReset(@RequestBody String email){
         try {
-        userService.initiatePasswordReset(email);
-        return ResponseEntity.noContent().build();
+            String trimmedEmail = email.trim();
+            userService.initiatePasswordReset(trimmedEmail);
+            return ResponseEntity.noContent().build();
         }catch(UserNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }catch (Exception e){
@@ -85,7 +87,7 @@ public class UserController{
     }
 
     //Reset Password(Accessible to everyone)
-    @PostMapping("/password/reset/confirm")
+    @PostMapping("/password/resets/confirms")
     public ResponseEntity<Void> resetPassword(@RequestParam("token") String token, @RequestParam("password") String newPassword){
         try {
             userService.resetPassword(token, newPassword);

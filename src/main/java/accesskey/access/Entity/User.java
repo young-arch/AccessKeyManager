@@ -46,12 +46,12 @@ public class User{
     @Setter
     @Getter
     @Column
-    private String resetToken;
+    private String otp;
 
     @Setter
     @Getter
     @Column
-    private LocalDateTime resetTokenExpirationTime;
+    private LocalDateTime otpExpirationTime;
 
     @Setter
     @Getter
