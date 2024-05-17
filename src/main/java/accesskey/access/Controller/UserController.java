@@ -1,5 +1,6 @@
 package accesskey.access.Controller;
 
+import accesskey.access.DTO.PasswordResetRequest;
 import accesskey.access.DTO.UserLoginRequest;
 import accesskey.access.Entity.User;
 import accesskey.access.Exceptions.UserNotFoundException;
@@ -73,10 +74,10 @@ public class UserController{
 
     //Initiate Password Reset(Accessible to everyone)
     @PostMapping("/password/resets")
-    public ResponseEntity<Void> initiatePasswordReset(@RequestBody String email){
+    public ResponseEntity<Void> initiatePasswordReset(@RequestBody PasswordResetRequest request){
         try {
-            String trimmedEmail = email.trim();
-            userService.initiatePasswordReset(trimmedEmail);
+            String email = request.getEmail();
+            userService.initiatePasswordReset(email);
             return ResponseEntity.noContent().build();
         }catch(UserNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -90,7 +91,7 @@ public class UserController{
     @PostMapping("/password/resets/confirms")
     public ResponseEntity<Void> resetPassword(@RequestParam("token") String token, @RequestParam("password") String newPassword){
         try {
-            userService.resetPassword(token, newPassword);
+            userService.resetPasswordWithOTP(token, newPassword);
             return ResponseEntity.noContent().build();
         }catch (UserNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
