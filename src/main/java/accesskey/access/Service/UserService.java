@@ -130,9 +130,15 @@ public class UserService{
     }
 
 
-    public void resetPasswordWithOTP(String otp, String newPassword){
+    public void resetPasswordWithOTP(String otp, String newPassword, String confirmPassword){
+
         //Verify the token and the associated user
         User user = verifyOTP(otp);
+
+        //Check if entered passwords match
+        if(!newPassword.equals(confirmPassword)){
+            throw new IllegalArgumentException("Passwords do not match.");
+        }
 
         //Update user's password
         String encodedPassword = passwordEncoder.encode(newPassword);
