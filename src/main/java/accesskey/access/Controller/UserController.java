@@ -89,11 +89,15 @@ public class UserController{
 
     //Reset Password(Accessible to everyone)
     @PostMapping("/password/resets/confirms")
-    public ResponseEntity<Void> resetPassword(@RequestParam("token") String token, @RequestParam("password") String newPassword){
+    public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestParam("password") String newPassword, @RequestParam("confirmPassword") String confirmPassword){
         try {
-            userService.resetPasswordWithOTP(token, newPassword);
+            userService.resetPasswordWithOTP(token, newPassword, confirmPassword);
             return ResponseEntity.noContent().build();
-        }catch (UserNotFoundException e){
+        }
+        catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match");
+        }
+        catch (UserNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }catch (Exception e){
             LOGGER.log(Level.SEVERE, "Error resetting password: " + e.getMessage(),e);
