@@ -106,6 +106,17 @@ public class AccessKeyService{
         return accessKeyRepository.existsByUserIdAndStatus(userId, AccessKey.AccessKeyStatus.ACTIVE);
     }
 
+    //Method to generate a random String
+    private String generateRandomString(int length){
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i<length; i++){
+            int index = (int) (characters.length() * Math.random());
+            sb.append(characters.charAt(index));
+        }
+        return sb.toString();
+    }
+
     //Methods for authorization checks
     private boolean isUserAdmin(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
