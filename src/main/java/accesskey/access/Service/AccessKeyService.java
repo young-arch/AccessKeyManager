@@ -22,17 +22,36 @@ public class AccessKeyService{
     }
 
     //Create a new Access key
-    public AccessKey createAccessKey(AccessKey accessKey){
-        //Checks if the user has Admin role
-        Integer userId = accessKey.getId();
-        if(isUserAdmin()){
-            throw new InvalidRequestException("Unauthorized: User must have an admin role to create access keys");
-        }
-        if (existsActiveKeyForUser(userId)) {
+    public AccessKey createAccessKeyWithCustomName(String customName){
+        //Check if current user has an active key
+        Integer userId = getCurrentUserId();
+        if(existsActiveKeyForUser(userId)){
             throw new IllegalStateException("User already has an active access key");
         }
+        //Generate a custom key name
+        String key = generateRandomString(10) + "-" + customName;
+
+        AccessKey accessKey = new AccessKey();
+        accessKey.setKey(key);
+        accessKey.setStatus(AccessKey.AccessKeyStatus.ACTIVE);
+        accessKey.setExpiryDate(LocalDateTime.now().plusDays(30));
+        accessKey.setUser(userService.findUserById(userId));
+        accessKey.setAccessKeyName(customName);
+
         return accessKeyRepository.save(accessKey);
     }
+
+    public Integer getCurrentUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null){
+            throw new SecurityException("No authenticated user found");
+        }
+        String currentUserEmail = authentication.getName();
+        User currentUser = userService.findUserByEmail(currentUserEmail);
+        return currentUser.getId();
+    }
+
+
 
     //Find access keys by user ID
     public List<AccessKey> findAccessKeysByUserId(Integer userId){

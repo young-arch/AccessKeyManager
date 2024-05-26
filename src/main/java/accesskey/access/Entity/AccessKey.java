@@ -2,6 +2,7 @@ package accesskey.access.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -35,14 +36,13 @@ public class AccessKey {
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @Column
-    private String accessKeyStatus;
-
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Getter
+    @Column
+    private String accessKeyName;
 
     @PreUpdate
     protected void onUpdate() {
@@ -55,4 +55,5 @@ public class AccessKey {
         EXPIRED,
         REVOKED
     }
+
 }

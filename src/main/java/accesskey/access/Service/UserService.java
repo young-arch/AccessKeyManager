@@ -242,4 +242,9 @@ public class UserService{
         userRepository.delete(user);
     }
 
+    public User findUserById(Integer id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    }
+
 }
