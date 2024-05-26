@@ -88,13 +88,12 @@ public class AccessKeyService{
         return accessKeyRepository.findAllByExpiryDateBefore(LocalDateTime.now());
     }
 
-    //Find access key by key string
-    public AccessKey findAccessKeyByKey(String key){
-        //Check if the user has admin role
-        if(isUserAdmin()){
-            throw new SecurityException("Unauthorized: User must have admin role to find access key by key");
+    public AccessKey findActiveAccessKeyByEmail(String email){
+        User user = userService.findUserByEmail(email);
+        if (user == null){
+            throw new AccessKeyNotFoundException("User not found with email: " + email);
         }
-        return accessKeyRepository.findByKey(key);
+        return findActiveAccessKey(user.getId());
     }
 
     //Find all access keys

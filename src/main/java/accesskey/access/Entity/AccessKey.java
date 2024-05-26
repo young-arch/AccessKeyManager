@@ -27,13 +27,18 @@ public class AccessKey {
     private LocalDateTime procurementDate;
 
     @Column(nullable = false)
-    private LocalDateTime expiryDate;  // Ensure this field name is `expiryDate`
+    private LocalDateTime expiryDate;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @Column
+    private String accessKeyStatus;
+
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

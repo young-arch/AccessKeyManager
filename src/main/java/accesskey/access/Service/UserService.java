@@ -71,11 +71,6 @@ public class UserService{
         return user;
     }
 
-    //Check if a user exits by email
-    public boolean userExists(String email){
-
-        return userRepository.existsByEmail(email);
-    }
 
     //Login user
     public User loginUser(String email, String password){
