@@ -1,6 +1,7 @@
 package accesskey.access.Controller;
 
 import accesskey.access.Entity.AccessKey;
+import accesskey.access.Exceptions.AccessKeyNotFoundException;
 import accesskey.access.Service.AccessKeyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -101,6 +102,18 @@ public class AccessKeyController {
     public ResponseEntity<Boolean> existsActiveKeyForUser(@PathVariable Integer userId){
         boolean existsActiveKey = accessKeyService.existsActiveKeyForUser(userId);
         return ResponseEntity.ok(existsActiveKey);
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/active/email")
+    public ResponseEntity<AccessKey> findActiveAccessKeyByEmail(@RequestParam String email){
+        try {
+            AccessKey activeAccessKey = accessKeyService.findActiveAccessKeyByEmail(email);
+            return ResponseEntity.ok(activeAccessKey);
+        }catch (AccessKeyNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
 
