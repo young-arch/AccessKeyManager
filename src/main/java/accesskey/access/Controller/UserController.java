@@ -89,9 +89,9 @@ public class UserController{
 
     //Reset Password(Accessible to everyone)
     @PostMapping("/password/resets/confirms")
-    public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestParam("password") String newPassword, @RequestParam("confirmPassword") String confirmPassword){
+    public ResponseEntity<String> resetPassword(@RequestParam("token") String otp, @RequestParam("password") String newPassword, @RequestParam("confirmPassword") String confirmPassword){
         try {
-            userService.resetPasswordWithOTP(token, newPassword, confirmPassword);
+            userService.resetPasswordWithOTP(otp, newPassword, confirmPassword);
             return ResponseEntity.noContent().build();
         }
         catch (IllegalArgumentException e){

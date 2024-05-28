@@ -23,8 +23,13 @@ public class AccessKeyController {
 
     }
 
-    //Create a new access key(Admin only)
-
+    //Create a new access key
+    @PreAuthorize("hasRole('ROLE_SCHOOL_IT')")
+    @PostMapping("/create")
+    public ResponseEntity<AccessKey> createAccessKey(@RequestParam String customKeyName){
+        AccessKey newAccessKey = accessKeyService.createAccessKeyWithCustomName(customKeyName);
+        return ResponseEntity.ok(newAccessKey);
+    }
 
     //Find active access keys for a user(School_IT and admin)
     @PreAuthorize("hasAnyRole('ROLE_SCHOOL_IT', 'ROLE_ADMIN')")
