@@ -3,31 +3,31 @@ package accesskey.access.Controller;
 import accesskey.access.Entity.AccessKey;
 import accesskey.access.Exceptions.AccessKeyNotFoundException;
 import accesskey.access.Service.AccessKeyService;
-import org.springframework.beans.factory.annotation.Autowired;
+import accesskey.access.Service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/accesskeys")
+@RequiredArgsConstructor
 public class AccessKeyController {
 
     private final AccessKeyService accessKeyService;
 
+    private final UserService userService;
 
-    @Autowired
-    public AccessKeyController(AccessKeyService accessKeyService){
-        this.accessKeyService = accessKeyService;
-
-    }
 
     //Create a new access key
     @PreAuthorize("hasRole('ROLE_SCHOOL_IT')")
-    @PostMapping("/create")
-    public ResponseEntity<AccessKey> createAccessKey(@RequestParam String customKeyName){
-        AccessKey newAccessKey = accessKeyService.createAccessKeyWithCustomName(customKeyName);
+    @GetMapping("/create")
+    public ResponseEntity<AccessKey> createAccessKey(@RequestParam String customKeyName, Authentication authentication){
+        Integer userId = this.userService.findUserByEmail(authentication.getName()).getId();
+        AccessKey newAccessKey = accessKeyService.createAccessKeyWithCustomName(customKeyName, userId);
         return ResponseEntity.ok(newAccessKey);
     }
 
@@ -88,12 +88,14 @@ public class AccessKeyController {
         return ResponseEntity.noContent().build();
     }
 
-    //Find all access keys with details
-    @PreAuthorize("hasAnyRole('ROLE_SCHOOL_IT', 'ROLE_ADMIN')")
+    //Find all access keys with details by ADMIN
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/all")
-    public ResponseEntity<List<AccessKey>> findAllAccessKeysWithDetails(){
-        List<AccessKey> accessKeys = accessKeyService.findAllAccessKeysWithDetails();
-        return ResponseEntity.ok(accessKeys);
+    public List<AccessKey> findAllAccessKeysWithDetails(){
+
+        //List<AccessKey> accessKeys = accessKeyService.findAllAccessKeysWithDetails();
+
+        return accessKeyService.findAllAccessKeysWithDetails();
     }
 
     //Check if there is an active key for a specific user

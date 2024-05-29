@@ -4,6 +4,7 @@ import accesskey.access.Entity.User;
 import accesskey.access.Exceptions.AccessKeyNotFoundException;
 import accesskey.access.Exceptions.InvalidRequestException;
 import accesskey.access.Repository.AccessKeyRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,19 +13,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AccessKeyService{
-
+    private final UserService userService;
     private final AccessKeyRepository accessKeyRepository;
 
-    @Autowired
-    public AccessKeyService(AccessKeyRepository accessKeyRepository){
-        this.accessKeyRepository = accessKeyRepository;
-    }
+//    public AccessKeyService(AccessKeyRepository accessKeyRepository){
+//        this.accessKeyRepository = accessKeyRepository;
+//    }
 
     //Create a new Access key
-    public AccessKey createAccessKeyWithCustomName(String customName){
+    public AccessKey createAccessKeyWithCustomName(String customName, Integer userId){
         //Check if current user has an active key
-        Integer userId = getCurrentUserId();
+
         if(existsActiveKeyForUser(userId)){
             throw new IllegalStateException("User already has an active access key");
         }
@@ -34,8 +35,9 @@ public class AccessKeyService{
         AccessKey accessKey = new AccessKey();
         accessKey.setKey(key);
         accessKey.setStatus(AccessKey.AccessKeyStatus.ACTIVE);
+        accessKey.setProcurementDate(LocalDateTime.now());
         accessKey.setExpiryDate(LocalDateTime.now().plusDays(30));
-        accessKey.setUser(userService.findUserById(userId));
+        accessKey.setUser(this.userService.findUserById(userId));
         accessKey.setAccessKeyName(customName);
 
         return accessKeyRepository.save(accessKey);
@@ -117,6 +119,7 @@ public class AccessKeyService{
 
     //Find all access keys
     public List<AccessKey> findAllAccessKeysWithDetails(){
+
         return accessKeyRepository.findAll();
     }
 
@@ -143,7 +146,6 @@ public class AccessKeyService{
                 .noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
     }
 
-    UserService userService;
     private boolean isCurrentUserOrAdmin(Integer userId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null){
@@ -158,6 +160,10 @@ public class AccessKeyService{
             return !isAdmin && !isCurrentUser;
         }
         return true;
+    }
+
+    public String codeSome(){
+        return "These are all the keys";
     }
 
 
