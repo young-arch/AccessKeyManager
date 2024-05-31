@@ -1,20 +1,22 @@
 package accesskey.access.Service;
 import accesskey.access.Entity.AccessKey;
+import accesskey.access.Entity.KeyDetails;
 import accesskey.access.Entity.User;
 import accesskey.access.Exceptions.AccessKeyNotFoundException;
-import accesskey.access.Exceptions.InvalidRequestException;
 import accesskey.access.Repository.AccessKeyRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class AccessKeyService{
+public class AccessKeyService implements AccessKeyServiceInterface{
     private final UserService userService;
     private final AccessKeyRepository accessKeyRepository;
 
@@ -26,9 +28,7 @@ public class AccessKeyService{
     public AccessKey createAccessKeyWithCustomName(String customName, Integer userId){
         //Check if current user has an active key
 
-        if(existsActiveKeyForUser(userId)){
-            throw new IllegalStateException("User already has an active access key");
-        }
+
         //Generate a custom key name
         String key = generateRandomString(10) + "-" + customName;
 
@@ -54,31 +54,6 @@ public class AccessKeyService{
     }
 
 
-
-    //Find access keys by user ID
-    public List<AccessKey> findAccessKeysByUserId(Integer userId){
-        //Check if current user is authorized to view access keys for this user ID
-        if(isCurrentUserOrAdmin(userId)){
-            throw new SecurityException("Unauthorized: You can only view access keys for your own account or if you are an admin");
-        }
-        return accessKeyRepository.findByUserId(userId);
-    }
-
-    //Find the active access key for a specific user
-    public AccessKey findActiveAccessKey(Integer userId){
-        //Check if the current user is authorized to view access keys for this user ID
-        if(isCurrentUserOrAdmin(userId)){
-            throw new SecurityException("Unauthorized: You can only view access keys which are ACTIVE for your own account or if you are an admin");
-        }
-
-        AccessKey activeAccessKey = accessKeyRepository.findByUserIdAndStatus(userId, AccessKey.AccessKeyStatus.valueOf("ACTIVE"));
-
-        if(activeAccessKey == null){
-            throw new AccessKeyNotFoundException("Active access key not found for user ID: " + userId);
-        }
-        return activeAccessKey;
-    }
-
     //Update the status of an access key
     public void updateAccessKeyStatus(Integer keyId, String newStatus){
         //Check if the use has admin role
@@ -92,12 +67,13 @@ public class AccessKeyService{
     }
 
     //Find and revoke an access key
-    public void revokeAccessKey(Integer keyId){
-        //Check if the user has admin role
-        if(isUserAdmin()){
-            throw new SecurityException("Unauthorized: User must have admin role to revoke access keys");
-        }
-        accessKeyRepository.updateStatusById(keyId, AccessKey.AccessKeyStatus.valueOf("REVOKED"));
+    public void revokeAccessKey(String email){
+        KeyDetails keyDetails = this.getActiveAccessKeyByEmail(email);
+
+        AccessKey key = accessKeyRepository.findByKey(keyDetails.getKey());
+        key.setStatus(AccessKey.AccessKeyStatus.REVOKED);
+
+        accessKeyRepository.save(key);
     }
 
     //Find all expired access keys
@@ -109,24 +85,7 @@ public class AccessKeyService{
         return accessKeyRepository.findAllByExpiryDateBefore(LocalDateTime.now());
     }
 
-    public AccessKey findActiveAccessKeyByEmail(String email){
-        User user = userService.findUserByEmail(email);
-        if (user == null){
-            throw new AccessKeyNotFoundException("User not found with email: " + email);
-        }
-        return findActiveAccessKey(user.getId());
-    }
 
-    //Find all access keys
-    public List<AccessKey> findAllAccessKeysWithDetails(){
-
-        return accessKeyRepository.findAll();
-    }
-
-    //Check if there is an active key for a specific user
-    public boolean existsActiveKeyForUser(Integer userId){
-        return accessKeyRepository.existsByUserIdAndStatus(userId, AccessKey.AccessKeyStatus.ACTIVE);
-    }
 
     //Method to generate a random String
     private String generateRandomString(int length){
@@ -146,26 +105,65 @@ public class AccessKeyService{
                 .noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
     }
 
-    private boolean isCurrentUserOrAdmin(Integer userId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null){
-            //Get the current user's email
-            String currentUserEmail = authentication.getName();
+//    private boolean isCurrentUserOrAdmin(Integer userId){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if(authentication != null){
+//            //Get the current user's email
+//            String currentUserEmail = authentication.getName();
+//
+//            //Check if the current user has admin role or owner of the account
+//            boolean isAdmin = authentication.getAuthorities().stream()
+//                    .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+//            User currentUser = userService.findUserByEmail(currentUserEmail);
+//            boolean isCurrentUser = currentUser.getId().equals(userId);
+//            return !isAdmin && !isCurrentUser;
+//        }
+//        return true;
+//    }
 
-            //Check if the current user has admin role or owner of the account
-            boolean isAdmin = authentication.getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-            User currentUser = userService.findUserByEmail(currentUserEmail);
-            boolean isCurrentUser = currentUser.getId().equals(userId);
-            return !isAdmin && !isCurrentUser;
+
+
+
+    @Override
+    public List<KeyDetails> getAllAccessKeysByEmail(String email) {
+        List<KeyDetails> keyByEmail = new ArrayList<>();
+        List<KeyDetails> allKeys = this.getAllAccessKeys();
+        for (KeyDetails key: allKeys){
+            if (key.getEmail().equalsIgnoreCase(email)){
+                keyByEmail.add(key);
+            }
         }
-        return true;
+        return keyByEmail;
     }
 
-    public String codeSome(){
-        return "These are all the keys";
+    @Override //Working
+    public List<KeyDetails> getAllAccessKeys() {
+        List<AccessKey> keyList = accessKeyRepository.findAll();
+        Map<Integer, KeyDetails> keyMap = new HashMap<>();
+        keyList.forEach(key -> {
+            KeyDetails keyDetails = new KeyDetails();
+            keyDetails.setKey(key.getKey());
+            keyDetails.setStatus(key.getStatus());
+            keyDetails.setProcurementDate(key.getProcurementDate());
+            keyDetails.setExpiryDate(key.getExpiryDate());
+            keyDetails.setEmail(key.getUser().getEmail());
+            keyDetails.setKeyName(key.getAccessKeyName());
+            keyMap.put(key.getId(), keyDetails);
+        });
+
+        return keyMap.values().stream().toList();
+
     }
 
+    @Override
+    public KeyDetails getActiveAccessKeyByEmail(String email) {
+        KeyDetails activeKeyByEmail = new KeyDetails();
+        List<KeyDetails> allKeys = this.getAllAccessKeys();
 
-
+        for (KeyDetails key: allKeys){
+            if(key.getStatus().equals(AccessKey.AccessKeyStatus.ACTIVE));
+            activeKeyByEmail = key;
+        }
+        return activeKeyByEmail;
+    }
 }

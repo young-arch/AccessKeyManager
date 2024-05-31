@@ -46,12 +46,12 @@ public class User{
     @Setter
     @Getter
     @Column
-    private String otp;
+    private String resetToken;
 
     @Setter
     @Getter
     @Column
-    private LocalDateTime otpExpirationTime;
+    private LocalDateTime resetTokenExpirationTime;
 
     @Setter
     @Getter
@@ -77,12 +77,12 @@ public class User{
         updatedAt = LocalDateTime.now();
     }
 
-    public Collection<? extends GrantedAuthority> getAuthorities(){
+    /**public Collection<? extends GrantedAuthority> getAuthorities(){
 
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("Role_" +role.name()));
         return authorities;
-    }
+    }*/
 
 
 }

@@ -1,5 +1,6 @@
 package accesskey.access.Controller;
 
+import accesskey.access.DTO.PasswordResetConfirmRequest;
 import accesskey.access.DTO.PasswordResetRequest;
 import accesskey.access.DTO.UserLoginRequest;
 import accesskey.access.Entity.User;
@@ -89,9 +90,9 @@ public class UserController{
 
     //Reset Password(Accessible to everyone)
     @PostMapping("/password/resets/confirms")
-    public ResponseEntity<String> resetPassword(@RequestParam("token") String otp, @RequestParam("password") String newPassword, @RequestParam("confirmPassword") String confirmPassword){
+    public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestBody PasswordResetConfirmRequest request){
         try {
-            userService.resetPasswordWithOTP(otp, newPassword, confirmPassword);
+            userService.resetPasswordWithToken(token,request.getNewPassword(), request.getConfirmPassword());
             return ResponseEntity.noContent().build();
         }
         catch (IllegalArgumentException e){
