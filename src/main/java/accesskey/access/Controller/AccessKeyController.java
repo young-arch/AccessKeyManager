@@ -5,10 +5,10 @@ import accesskey.access.Entity.KeyDetails;
 import accesskey.access.Exceptions.AccessKeyNotFoundException;
 import accesskey.access.Service.AccessKeyService;
 import accesskey.access.Service.UserService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,17 +20,8 @@ public class AccessKeyController {
 
     private final AccessKeyService accessKeyService;
 
+    @Getter
     private final UserService userService;
-
-
-    //Create a new access key
-    @PreAuthorize("hasRole('ROLE_SCHOOL_IT')")
-    @GetMapping("/create")
-    public ResponseEntity<AccessKey> createAccessKey(@RequestParam String customKeyName, Authentication authentication){
-        Integer userId = this.userService.findUserByEmail(authentication.getName()).getId();
-        AccessKey newAccessKey = accessKeyService.createAccessKeyWithCustomName(customKeyName, userId);
-        return ResponseEntity.ok(newAccessKey);
-    }
 
 
 
@@ -75,10 +66,6 @@ public class AccessKeyController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
-
-
 
 
 }

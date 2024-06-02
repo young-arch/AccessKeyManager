@@ -3,13 +3,16 @@ package accesskey.access.Controller;
 import accesskey.access.DTO.PasswordResetConfirmRequest;
 import accesskey.access.DTO.PasswordResetRequest;
 import accesskey.access.DTO.UserLoginRequest;
+import accesskey.access.Entity.AccessKey;
 import accesskey.access.Entity.User;
 import accesskey.access.Exceptions.UserNotFoundException;
+import accesskey.access.Service.AccessKeyService;
 import accesskey.access.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.logging.Level;
@@ -20,12 +23,27 @@ import java.util.logging.Logger;
 public class UserController{
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
 
+    private final AccessKeyService accessKeyService;
+
 
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService){
+    public UserController(AccessKeyService accessKeyService, UserService userService){
+        this.accessKeyService = accessKeyService;
+
         this.userService = userService;
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_SCHOOL_IT')")
+    @GetMapping("/createAccessKey")
+    public ResponseEntity<AccessKey> createAccessKey(@RequestParam String customKeyName, Authentication authentication){
+        Integer userId = this.userService.findUserByEmail(authentication.getName()).getId();
+        AccessKey newAccessKey = accessKeyService.createAccessKeyWithCustomName(customKeyName, userId);
+
+
+        return ResponseEntity.ok(newAccessKey);
     }
 
     //Create a new user(Accessible to everyone)
@@ -163,8 +181,6 @@ public class UserController{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
-
 
 
 }

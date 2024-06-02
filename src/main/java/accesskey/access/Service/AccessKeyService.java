@@ -20,14 +20,10 @@ public class AccessKeyService implements AccessKeyServiceInterface{
     private final UserService userService;
     private final AccessKeyRepository accessKeyRepository;
 
-//    public AccessKeyService(AccessKeyRepository accessKeyRepository){
-//        this.accessKeyRepository = accessKeyRepository;
-//    }
 
     //Create a new Access key
     public AccessKey createAccessKeyWithCustomName(String customName, Integer userId){
-        //Check if current user has an active key
-
+        //Check if current user has an active Key
 
         //Generate a custom key name
         String key = generateRandomString(10) + "-" + customName;
@@ -53,18 +49,6 @@ public class AccessKeyService implements AccessKeyServiceInterface{
         return currentUser.getId();
     }
 
-
-    //Update the status of an access key
-    public void updateAccessKeyStatus(Integer keyId, String newStatus){
-        //Check if the use has admin role
-        if(isUserAdmin()){
-            throw new SecurityException("Unauthorized: User must have admin role to update access key status");
-        }
-        AccessKey accessKey = accessKeyRepository.findById(keyId)
-                .orElseThrow(() -> new AccessKeyNotFoundException("Access key not found with id: " + keyId));
-        accessKey.setStatus(AccessKey.AccessKeyStatus.valueOf(newStatus));
-        accessKeyRepository.save(accessKey);
-    }
 
     //Find and revoke an access key
     public void revokeAccessKey(String email){
@@ -104,24 +88,6 @@ public class AccessKeyService implements AccessKeyServiceInterface{
         return authentication == null || authentication.getAuthorities().stream()
                 .noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
     }
-
-//    private boolean isCurrentUserOrAdmin(Integer userId){
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if(authentication != null){
-//            //Get the current user's email
-//            String currentUserEmail = authentication.getName();
-//
-//            //Check if the current user has admin role or owner of the account
-//            boolean isAdmin = authentication.getAuthorities().stream()
-//                    .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-//            User currentUser = userService.findUserByEmail(currentUserEmail);
-//            boolean isCurrentUser = currentUser.getId().equals(userId);
-//            return !isAdmin && !isCurrentUser;
-//        }
-//        return true;
-//    }
-
-
 
 
     @Override
@@ -166,4 +132,5 @@ public class AccessKeyService implements AccessKeyServiceInterface{
         }
         return activeKeyByEmail;
     }
+
 }

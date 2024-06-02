@@ -21,8 +21,9 @@ public class SecurityConfig{
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("api/users/password/reset", "/api/users/password/reset/confirm").permitAll()
-                        .requestMatchers("/api/users/**").permitAll()
-                        .requestMatchers("/api/accesskeys/**").authenticated()
+                        .requestMatchers("api/users/createAccessKey").hasRole("SCHOOL_IT")
+                        .requestMatchers("/api/users/**").authenticated()
+                        .requestMatchers("/api/accesskeys/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
 
                 )
