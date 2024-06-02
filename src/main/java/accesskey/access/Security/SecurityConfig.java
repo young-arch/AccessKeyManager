@@ -22,6 +22,7 @@ public class SecurityConfig{
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("api/users/password/reset", "/api/users/password/reset/confirm").permitAll()
                         .requestMatchers("api/users/createAccessKey").hasRole("SCHOOL_IT")
+                        .requestMatchers("api/users/myAccessKeys").hasRole("SCHOOL_IT")
                         .requestMatchers("/api/users/**").authenticated()
                         .requestMatchers("/api/accesskeys/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

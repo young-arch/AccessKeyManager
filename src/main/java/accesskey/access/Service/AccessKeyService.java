@@ -121,17 +121,7 @@ public class AccessKeyService implements AccessKeyServiceInterface{
 
     }
 
-    /*@Override
-    public KeyDetails getActiveAccessKeyByEmail(String email) {
-        KeyDetails activeKeyByEmail = new KeyDetails();
-        List<KeyDetails> allKeys = this.getAllAccessKeys();
 
-        for (KeyDetails key: allKeys){
-            if(key.getStatus().equals(AccessKey.AccessKeyStatus.ACTIVE));
-            activeKeyByEmail = key;
-        }
-        return activeKeyByEmail;
-    }*/
     @Override
     public KeyDetails getActiveAccessKeyByEmail(String email){
         List<KeyDetails> allKeys = this.getAllAccessKeysByEmail(email);

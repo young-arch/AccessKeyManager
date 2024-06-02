@@ -4,6 +4,7 @@ import accesskey.access.DTO.PasswordResetConfirmRequest;
 import accesskey.access.DTO.PasswordResetRequest;
 import accesskey.access.DTO.UserLoginRequest;
 import accesskey.access.Entity.AccessKey;
+import accesskey.access.Entity.KeyDetails;
 import accesskey.access.Entity.User;
 import accesskey.access.Exceptions.UserNotFoundException;
 import accesskey.access.Service.AccessKeyService;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +37,6 @@ public class UserController{
         this.userService = userService;
     }
 
-
     @PreAuthorize("hasRole('ROLE_SCHOOL_IT')")
     @GetMapping("/createAccessKey")
     public ResponseEntity<AccessKey> createAccessKey(@RequestParam String customKeyName, Authentication authentication){
@@ -45,6 +46,18 @@ public class UserController{
 
         return ResponseEntity.ok(newAccessKey);
     }
+
+    @PreAuthorize("hasRole('ROLE_SCHOOL_IT')")
+    @GetMapping("/myAccessKeys")
+    public ResponseEntity<List<KeyDetails>> getAccessKeys(){
+        Integer userId = accessKeyService.getCurrentUserId();
+        User currentUser = userService.findUserById(userId);
+        String email = currentUser.getEmail();
+        List<KeyDetails> accessKeys = accessKeyService.getAllAccessKeysByEmail(email);
+
+        return ResponseEntity.ok(accessKeys);
+    }
+
 
     //Create a new user(Accessible to everyone)
     @PostMapping
