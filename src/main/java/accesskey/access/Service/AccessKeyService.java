@@ -121,7 +121,7 @@ public class AccessKeyService implements AccessKeyServiceInterface{
 
     }
 
-    @Override
+    /*@Override
     public KeyDetails getActiveAccessKeyByEmail(String email) {
         KeyDetails activeKeyByEmail = new KeyDetails();
         List<KeyDetails> allKeys = this.getAllAccessKeys();
@@ -131,6 +131,16 @@ public class AccessKeyService implements AccessKeyServiceInterface{
             activeKeyByEmail = key;
         }
         return activeKeyByEmail;
+    }*/
+    @Override
+    public KeyDetails getActiveAccessKeyByEmail(String email){
+        List<KeyDetails> allKeys = this.getAllAccessKeysByEmail(email);
+        for (KeyDetails key : allKeys){
+            if (key.getStatus().equals(AccessKey.AccessKeyStatus.ACTIVE)){
+                return key;
+            }
+        }
+        throw new AccessKeyNotFoundException("No active access key not found for email: " + email);
     }
 
 }
