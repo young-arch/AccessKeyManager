@@ -9,10 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +21,9 @@ public class AccessKeyService implements AccessKeyServiceInterface{
     //Create a new Access key
     public AccessKey createAccessKeyWithCustomName(String customName, Integer userId){
         //Check if current user has an active Key
-
+        if (userHasActiveKey(userId)){
+            throw new IllegalStateException("User already has an active Key.");
+        }
         //Generate a custom key name
         String key = generateRandomString(10) + "-" + customName;
 
@@ -37,6 +36,13 @@ public class AccessKeyService implements AccessKeyServiceInterface{
         accessKey.setAccessKeyName(customName);
 
         return accessKeyRepository.save(accessKey);
+    }
+
+    public boolean userHasActiveKey(Integer userId){
+        User user = userService.findUserById(userId);
+        List<AccessKey> activeKeys = accessKeyRepository.findByUserAndStatus(user, AccessKey.AccessKeyStatus.ACTIVE);
+        return !activeKeys.isEmpty();
+
     }
 
     public Integer getCurrentUserId(){
@@ -63,9 +69,6 @@ public class AccessKeyService implements AccessKeyServiceInterface{
     //Find all expired access keys
     public List<AccessKey> findExpiredAccessKeys(){
         //Check if the user has admin role
-        if(isUserAdmin()){
-            throw new SecurityException("Unauthorized: User must have admin role to view expired access keys");
-        }
         return accessKeyRepository.findAllByExpiryDateBefore(LocalDateTime.now());
     }
 

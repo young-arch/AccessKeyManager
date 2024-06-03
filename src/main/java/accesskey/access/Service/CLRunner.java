@@ -1,5 +1,6 @@
 package accesskey.access.Service;
 
+import accesskey.access.Entity.AccessKey;
 import accesskey.access.Entity.KeyDetails;
 import accesskey.access.Entity.User;
 import accesskey.access.Repository.AccessKeyRepository;
@@ -22,6 +23,9 @@ public class CLRunner implements CommandLineRunner {
 
        List<KeyDetails> keys = this.accessKeyService.getAllAccessKeysByEmail("mawulegabriel@gmail.com");
        keys.forEach(System.out::println);
+
+       List<AccessKey> mygoneKeys = accessKeyService.findExpiredAccessKeys();
+       mygoneKeys.forEach(System.out::println);
 
         //User user = userService.findUserByEmail("mawulegabriel@gmail.com");
         //var user2 = accessKeyRepository.findById(11);

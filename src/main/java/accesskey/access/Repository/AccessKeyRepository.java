@@ -15,6 +15,9 @@ public interface AccessKeyRepository extends JpaRepository<AccessKey, Integer> {
     //Finds all access keys for a specific user
     List<AccessKey> findByUser(User user);
 
+    //Find active access keys for a specific user
+    List<AccessKey> findByUserAndStatus(User user, AccessKey.AccessKeyStatus status);
+
 
     //Update the status of an access key by ID
     @Modifying
@@ -27,5 +30,8 @@ public interface AccessKeyRepository extends JpaRepository<AccessKey, Integer> {
     //Find the access key by key String
     AccessKey findByKey(String key);
 
+    @Modifying
+    @Query("UPDATE AccessKey a SET a.status = ?2 WHERE a.id IN ?1")
+    void updateStatusByIds(List<Integer> ids, AccessKey.AccessKeyStatus newStatus);
 
 }

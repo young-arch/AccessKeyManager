@@ -39,13 +39,20 @@ public class UserController{
 
     @PreAuthorize("hasRole('ROLE_SCHOOL_IT')")
     @GetMapping("/createAccessKey")
-    public ResponseEntity<AccessKey> createAccessKey(@RequestParam String customKeyName, Authentication authentication){
+    public ResponseEntity<?> createAccessKey(@RequestParam String customKeyName, Authentication authentication){
         Integer userId = this.userService.findUserByEmail(authentication.getName()).getId();
-        AccessKey newAccessKey = accessKeyService.createAccessKeyWithCustomName(customKeyName, userId);
+        try {
+            AccessKey newAccessKey = accessKeyService.createAccessKeyWithCustomName(customKeyName, userId);
+            return ResponseEntity.ok(newAccessKey);
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+
+        }
 
 
-        return ResponseEntity.ok(newAccessKey);
     }
+
+
 
     @PreAuthorize("hasRole('ROLE_SCHOOL_IT')")
     @GetMapping("/myAccessKeys")
