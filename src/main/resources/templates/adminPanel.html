@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Access Key Management</h1>
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>Email</th>
+            <th>KeyName</th>
+            <th>Key</th>
+            <th>Procurement Date</th>
+            <th>Expiry Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="accessKey : ${accessKeys}">
+            <td th:text="${accessKey.email}"></td>
+            <td th:text="${accessKey.keyName}"></td>
+            <td th:text="${accessKey.key}"></td>
+            <td th:text="${#temporals.format(accessKey.procurementDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${#temporals.format(accessKey.expiryDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${accessKey.status}"></td>
+            <td>
+
+                    <a th:href="@{/admin/revoke(email=${accessKey.email})}"  href="#" type="submit" class="btn btn-danger btn-sm">Revoke</a>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

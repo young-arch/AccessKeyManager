@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//Automatically handles updating expired keys
+
 public class AccessKeyScheduler {
 
     private AccessKeyRepository accessKeyRepository;

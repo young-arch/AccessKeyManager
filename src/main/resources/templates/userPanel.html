@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Access Keys</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('https://www.transparenttextures.com/patterns/wood.png');
+            color: #333;
+        }
+        .container {
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            flex: 1 1 calc(33% - 20px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background-color: #ffffff;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .card-header {
+            background-color: #4a90e2;
+            color: white;
+            font-size: 1.25rem;
+            text-align: center;
+            padding: 10px;
+        }
+        .card-body {
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+        .card-footer {
+            background-color: #4a90e2;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        h1, h2 {
+            color: #4a90e2;
+        }
+        label {
+            color: #333;
+        }
+        input[type="text"] {
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+        }
+        .status-active {
+            color: #28a745; /* Green */
+            font-weight: bold;
+        }
+        .status-expired {
+            color: #dc3545; /* Red */
+            font-weight: bold;
+        }
+        .status-pending {
+            color: #ffc107; /* Yellow */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Your Access Keys</h1>
+    <div class="card-container">
+        <div class="card" th:each="accessKey : ${accessKeys}">
+            <div class="card-header" th:text="${accessKey.keyName}"></div>
+            <div class="card-body">
+                <p class="card-text"><strong>Email:</strong> <span th:text="${accessKey.email}"></span></p>
+                <p class="card-text"><strong>Key:</strong> <span th:text="${accessKey.key}"></span></p>
+                <p class="card-text"><strong>Creation Date:</strong> <span th:text="${#temporals.format(accessKey.procurementDate, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+                <p class="card-text"><strong>Expiration Date:</strong> <span th:text="${#temporals.format(accessKey.expiryDate, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+                <p class="card-text"><strong>Status:</strong> <span th:text="${accessKey.status}"
+                                                                    th:classappend="${accessKey.status == 'Active' ? 'status-active' :
+                                         accessKey.status == 'Expired' ? 'status-expired' :
+                                         'status-pending'}"></span></p>
+            </div>
+            <div class="card-footer">
+                Access Key Details
+            </div>
+        </div>
+    </div>
+
+    <h2 class="my-4">Generate New Access Key</h2>
+    <form th:action="@{/user/create}" method="post">
+        <div class="form-group">
+            <label for="keyName">Key Name:</label>
+            <input type="text" class="form-control" id="keyName" name="customKeyName" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate</button>
+    </form>
+</div>
+</body>
+</html>

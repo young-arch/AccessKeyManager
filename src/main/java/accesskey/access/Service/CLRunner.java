@@ -18,14 +18,15 @@ public class CLRunner implements CommandLineRunner {
     private final UserService userService;
     private final AccessKeyRepository accessKeyRepository;
 
+    //Test functions in the IDE when i start the program
     @Override
     public void run(String... args) throws Exception {
 
-       List<KeyDetails> keys = this.accessKeyService.getAllAccessKeysByEmail("mawulegabriel@gmail.com");
-       keys.forEach(System.out::println);
+      // List<KeyDetails> keys = this.accessKeyService.getAllAccessKeysByEmail("mawulegabriel@gmail.com");
+      // keys.forEach(System.out::println);
 
-       List<AccessKey> mygoneKeys = accessKeyService.findExpiredAccessKeys();
-       mygoneKeys.forEach(System.out::println);
+       //List<AccessKey> mygoneKeys = accessKeyService.findExpiredAccessKeys();
+       //mygoneKeys.forEach(System.out::println);
 
         //User user = userService.findUserByEmail("mawulegabriel@gmail.com");
         //var user2 = accessKeyRepository.findById(11);

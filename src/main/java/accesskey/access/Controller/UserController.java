@@ -37,6 +37,7 @@ public class UserController{
         this.userService = userService;
     }
 
+    //(Accessible to users only)
     @PreAuthorize("hasRole('ROLE_SCHOOL_IT')")
     @GetMapping("/createAccessKey")
     public ResponseEntity<?> createAccessKey(@RequestParam String customKeyName, Authentication authentication){
@@ -53,7 +54,7 @@ public class UserController{
     }
 
 
-
+    //Users can view their accessKeys
     @PreAuthorize("hasRole('ROLE_SCHOOL_IT')")
     @GetMapping("/myAccessKeys")
     public ResponseEntity<List<KeyDetails>> getAccessKeys(){
@@ -80,20 +81,7 @@ public class UserController{
 
     }
 
-    //Find a user by email(Accessible to admin only)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/{email}")
-    public ResponseEntity<User> findUserByEmail(@PathVariable String email){
-        try{
-            User user = userService.findUserByEmail(email);
-            return ResponseEntity.ok(user);
-        }catch (UserNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }catch (Exception e){
-            LOGGER.log(Level.SEVERE, "Error Finding user by email: " + e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
+
 
     //Update a user's password(Accessible to user only if they match the email)
     @PreAuthorize("#email == authentication.principal.username")
@@ -144,20 +132,7 @@ public class UserController{
         }
     }
 
-    //User Login(Accessible to everyone)
-    @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody UserLoginRequest userLoginRequest){
-        try{
-            User user = userService.loginUser(userLoginRequest.getEmail(), userLoginRequest.getPassword());
-            return ResponseEntity.ok(user);
-        }catch (UserNotFoundException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }catch (Exception e){
-            LOGGER.log(Level.SEVERE, "Error logging in user: " + e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
 
-    }
 
     //Initiate User Verification(Accessible to everyone)
     @PostMapping("/verify")
