@@ -92,10 +92,11 @@
                 <p class="card-text"><strong>Key:</strong> <span th:text="${accessKey.key}"></span></p>
                 <p class="card-text"><strong>Creation Date:</strong> <span th:text="${#temporals.format(accessKey.procurementDate, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
                 <p class="card-text"><strong>Expiration Date:</strong> <span th:text="${#temporals.format(accessKey.expiryDate, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
-                <p class="card-text"><strong>Status:</strong> <span th:text="${accessKey.status}"
-                                                                    th:classappend="${accessKey.status == 'Active' ? 'status-active' :
-                                         accessKey.status == 'Expired' ? 'status-expired' :
-                                         'status-pending'}"></span></p>
+                <p class="card-text"><strong>Status:</strong>
+                    <span th:text="${accessKey.status}"
+                          th:classappend="${accessKey.status == 'Active' ? 'status-active' : (accessKey.status == 'Expired' ? 'status-expired' : 'status-pending')}">
+                    </span>
+                </p>
             </div>
             <div class="card-footer">
                 Access Key Details
