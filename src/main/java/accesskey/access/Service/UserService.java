@@ -150,7 +150,7 @@ public class UserService{
     }
 
     public User verifyResetToken(String resetToken){
-        //Find the user by OTP
+        //Find the user
         User user = userRepository.findByResetToken(resetToken);
 
         if(user == null){

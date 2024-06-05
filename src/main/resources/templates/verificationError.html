@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Verification Error</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            margin: 0;
+        }
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: #333;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+        .card-title {
+            font-weight: bold;
+            color: #333;
+        }
+        .alert {
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title text-center">Verification Error</h3>
+        <div th:if="${verificationError}" class="alert alert-danger">
+            <span th:text="${verificationError}"></span>
+        </div>
+        <p>Please try to verify your account again or contact support if the issue persists.</p>
+    </div>
+</div>
+</body>
+</html>
