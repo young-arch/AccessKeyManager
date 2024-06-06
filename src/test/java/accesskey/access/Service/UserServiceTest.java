@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class UserServiceTest {
-
+    //All tests passed with no issues
     @Mock
     private UserRepository userRepository;
 
