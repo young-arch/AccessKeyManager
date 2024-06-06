@@ -31,7 +31,7 @@ public class AccessKeyService implements AccessKeyServiceInterface{
         accessKey.setKey(key);
         accessKey.setStatus(AccessKey.AccessKeyStatus.ACTIVE);
         accessKey.setProcurementDate(LocalDateTime.now());
-        accessKey.setExpiryDate(LocalDateTime.now().plusDays(30));
+        accessKey.setExpiryDate(LocalDateTime.now().plusMinutes(1));
         accessKey.setUser(this.userService.findUserById(userId));
         accessKey.setAccessKeyName(customName);
 
@@ -83,13 +83,6 @@ public class AccessKeyService implements AccessKeyServiceInterface{
             sb.append(characters.charAt(index));
         }
         return sb.toString();
-    }
-
-    //Methods for authorization checks
-    private boolean isUserAdmin(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication == null || authentication.getAuthorities().stream()
-                .noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
     }
 
 
