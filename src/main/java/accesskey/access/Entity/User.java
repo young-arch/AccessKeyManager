@@ -77,12 +77,6 @@ public class User{
         updatedAt = LocalDateTime.now();
     }
 
-    /**public Collection<? extends GrantedAuthority> getAuthorities(){
-
-        Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority("Role_" +role.name()));
-        return authorities;
-    }*/
 
 
 }
