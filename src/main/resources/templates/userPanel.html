@@ -14,6 +14,7 @@
             background-color: rgba(255, 255, 255, 0.9);
             padding: 20px;
             border-radius: 10px;
+            position: relative;
         }
         .card-container {
             display: flex;
@@ -79,10 +80,24 @@
             color: #ffc107; /* Yellow */
             font-weight: bold;
         }
+        .signout-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .signout-button button {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
+    <div class="signout-button">
+        <form th:action="@{/auth/logout}" method="post">
+            <button type="submit" class="btn btn-danger">Sign Out</button>
+        </form>
+    </div>
     <h1 class="my-4">Your Access Keys</h1>
     <div class="card-container">
         <div class="card" th:each="accessKey : ${accessKeys}">
