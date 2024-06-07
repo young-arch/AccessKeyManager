@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthenticationFront {
 
+    @GetMapping("/home")
+    public String home() {
+        return "index";
+    }
+
     @Autowired
     private UserService userService;
 
@@ -59,7 +64,7 @@ public class AuthenticationFront {
 
     @GetMapping("/forgotpassword")
     public String showForgotPasswordForm() {
-        return "forgot-password"; // Ensure this matches the actual template name
+        return "forgot-password";
     }
 
     @PostMapping("/forgotpassword")
@@ -77,7 +82,7 @@ public class AuthenticationFront {
     @GetMapping("/reset-password")
     public String resetPassword(@RequestParam("token") String token, Model model) {
         model.addAttribute("token", token);
-        return "reset-password"; // Ensure this matches the actual template name
+        return "reset-password";
     }
 
     @PostMapping("/password/resets/confirms")

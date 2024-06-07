@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>School Management Platform</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('https://www.transparenttextures.com/patterns/wood.png');
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: #333;
+        }
+        .btn-primary {
+            background-color: #2575fc;
+            border-color: #2575fc;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #6a11cb;
+            border-color: #6a11cb;
+        }
+        .btn-link {
+            color: #2575fc;
+            text-decoration: none;
+        }
+        .btn-link:hover {
+            color: #6a11cb;
+            text-decoration: underline;
+        }
+        .logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <img src="https://img.icons8.com/ios-filled/100/000000/school.png" alt="School Logo" class="logo"/>
+    <h1>Welcome to AccessKey Management Platform</h1>
+    <p>
+        Our platform offers a comprehensive school management solution tailored specifically for each school.
+        Schools can easily set up their accounts and manage their operations as though the platform was built
+        exclusively for them. Instead of integrating payment features, we use an access key-based approach to
+        monetize the platform. Schools can purchase access keys to activate their accounts and unlock the full
+        potential of our software.
+    </p>
+    <div>
+        <a href="/auth/login" class="btn btn-primary btn-lg">Login</a>
+        <a href="/auth/signup" class="btn btn-link btn-lg">Sign Up</a>
+    </div>
+</div>
+</body>
+</html>

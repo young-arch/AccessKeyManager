@@ -18,7 +18,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/signup","/auth/forgotpassword", "/auth/reset-password", "/auth/password/resets/", "/api/users/password/reset", "/api/users/password/reset/confirm").permitAll() // Allow access to login and signup pages
+                        .requestMatchers("/auth/home","/auth/login", "/auth/signup","/auth/forgotpassword", "/auth/reset-password", "/auth/password/resets/", "/api/users/password/reset", "/api/users/password/reset/confirm").permitAll() // Allow access to login and signup pages
                         .requestMatchers("/api/users/createAccessKey").hasRole("SCHOOL_IT")
                         .requestMatchers("/api/users/myAccessKeys").hasRole("SCHOOL_IT")
                         .requestMatchers("/user/**").hasRole("SCHOOL_IT")
