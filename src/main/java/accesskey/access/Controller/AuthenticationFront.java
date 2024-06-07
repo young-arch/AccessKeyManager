@@ -8,13 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("auth/")
+@RequestMapping("/auth")
 public class AuthenticationFront {
 
     @Autowired
@@ -57,6 +54,51 @@ public class AuthenticationFront {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/forgotpassword")
+    public String showForgotPasswordForm() {
+        return "forgot-password"; // Ensure this matches the actual template name
+    }
+
+    @PostMapping("/forgotpassword")
+    public ResponseEntity<Void> initiatePasswordReset(@RequestParam String email) {
+        try {
+            userService.initiatePasswordReset(email);
+            return ResponseEntity.noContent().build();
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/reset-password")
+    public String resetPassword(@RequestParam("token") String token, Model model) {
+        model.addAttribute("token", token);
+        return "reset-password"; // Ensure this matches the actual template name
+    }
+
+    @PostMapping("/password/resets/confirms")
+    public String resetPassword(@RequestParam("token") String token,
+                                @RequestParam("newPassword") String newPassword,
+                                @RequestParam("confirmPassword") String confirmPassword,
+                                Model model) {
+        try {
+            userService.resetPasswordWithToken(token, newPassword, confirmPassword);
+            model.addAttribute("message", "Your password has been reset successfully. Please login with your new password.");
+            return "login";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", "Passwords do not match.");
+            model.addAttribute("token", token);
+            return "reset-password";
+        } catch (UserNotFoundException e) {
+            model.addAttribute("error", "Invalid token.");
+            return "reset-password";
+        } catch (Exception e) {
+            model.addAttribute("error", "An error occurred. Please try again.");
+            return "reset-password";
         }
     }
 }
