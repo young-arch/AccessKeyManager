@@ -71,7 +71,7 @@ The AccessKey Management System is a web application designed to manage access k
    ```bash
    mvn spring-boot:run
    ```
-###ADMIN ACCOUNT DETAILS
+### ADMIN ACCOUNT DETAILS
  ```
 mail: mawulegabriel@gmail.com
 password: masters
@@ -80,19 +80,19 @@ password: masters
 
 ### Thymeleaf Frontend
 The application uses Thymeleaf templates for the frontend, providing a dynamic and interactive user interface. The following templates are included:
-##auth/home
+## auth/home
 -  `index.html`: Homepage with links to Login and Signup pages. 
 
-###auth/login
+### auth/login
 - `login.html`: Login page. 
 
-###auth/signup
+### auth/signup
 - `signup.html`: Signup page.
 
-###auth/admin
+### auth/admin
 -`adminPanel.html`: Admin page.
 
-###auth/user
+### auth/user
 -`userPanel.html`: Signup page.
 
 - `forgot-password.html`: Password reset request page.
