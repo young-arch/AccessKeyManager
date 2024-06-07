@@ -76,15 +76,21 @@ The AccessKey Management System is a web application designed to manage access k
 The application uses Thymeleaf templates for the frontend, providing a dynamic and interactive user interface. The following templates are included:
 ##auth/home
 -  `index.html`: Homepage with links to Login and Signup pages. 
+
 ##auth/login
 - `login.html`: Login page. 
+
 ##auth/signup
 - `signup.html`: Signup page.
+
 ##auth/admin
 -`adminPanel.html`: Admin page.
+
 ##auth/user
 -`userPanel.html`: Signup page.
+
 - `forgot-password.html`: Password reset request page.
+
 - `reset-password.html`: Password reset confirmation page.
 
 These templates are styled using Bootstrap for a modern and responsive design.
