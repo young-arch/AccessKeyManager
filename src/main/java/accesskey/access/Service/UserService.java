@@ -122,10 +122,10 @@ public class UserService{
         userRepository.save(user);
 
     }
-
     public String generateResetLink(String resetToken){
-        return "http://localhost:8080/api/users/password/resets/confirms?token=" + resetToken;
+        return "https://accesskeymanager-kp51.onrender.com/api/users/password/resets/confirms?token=" + resetToken;
     }
+
 
 
     public void resetPasswordWithToken(String resetToken, String newPassword, String confirmPassword){
@@ -205,7 +205,7 @@ public class UserService{
 
     //Generate verification link
     private String generateVerificationLink(String token){
-        return "http://localhost:8080/api/users/verify/confirm?token=" + token;
+        return "https://accesskeymanager-kp51.onrender.com/api/users/verify/confirm?token=" + token;
     }
 
     //Verify user's email
