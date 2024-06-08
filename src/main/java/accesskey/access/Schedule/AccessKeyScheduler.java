@@ -18,7 +18,7 @@ public class AccessKeyScheduler {
     @Autowired
     private AccessKeyRepository accessKeyRepository;
 
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     @Transactional
     public void updateExpiredKeys(){
         LocalDateTime now = LocalDateTime.now();

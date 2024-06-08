@@ -31,7 +31,7 @@ public class AccessKeyService implements AccessKeyServiceInterface{
         accessKey.setKey(key);
         accessKey.setStatus(AccessKey.AccessKeyStatus.ACTIVE);
         accessKey.setProcurementDate(LocalDateTime.now());
-        accessKey.setExpiryDate(LocalDateTime.now().plusMinutes(1));
+        accessKey.setExpiryDate(LocalDateTime.now().plusDays(2));
         accessKey.setUser(this.userService.findUserById(userId));
         accessKey.setAccessKeyName(customName);
 
