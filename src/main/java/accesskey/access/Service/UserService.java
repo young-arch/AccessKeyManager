@@ -51,7 +51,7 @@ public class UserService{
         //Generate a verification token
         String verificationToken = generateVerificationToken();
         user.setVerificationToken(verificationToken);
-        user.setVerificationTokenExpirationTime(LocalDateTime.now().plusHours(8)); //Token is valid for 8 hours
+        user.setVerificationTokenExpirationTime(LocalDateTime.now().plusMinutes(20)); //Token is valid for 20 minutes
 
         //Send Verification email
         String verificationLink = generateVerificationLink(verificationToken);
