@@ -96,7 +96,7 @@ Software business Micro-Focus Inc. has created a multi-tenant school management 
 
 - **Initiate password reset:**
   ```http
-  POST /api/users/password/resets
+  POST /auth/forgotpassword
   {
       "email": "user@example.com"
   }
@@ -104,14 +104,14 @@ Software business Micro-Focus Inc. has created a multi-tenant school management 
   
 
 - **Confirm password reset:**
-  ```http
-  POST /api/users/password/resets/confirms?token
-  {
-      
-      "newPassword": "new-password",
-      "confirmPassword": "confirm-password"
-  }
-  ```
+```http
+  POST /auth/password/resets/confirms
+{
+    "token": "<reset_token>",
+    "newPassword": "new-password",
+    "confirmPassword": "confirm-password"
+}
+```
 
 
 #### Access Key Endpoints
