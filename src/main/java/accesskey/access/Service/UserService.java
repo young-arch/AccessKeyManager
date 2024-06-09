@@ -123,7 +123,7 @@ public class UserService{
 
     }
     public String generateResetLink(String resetToken){
-        return "https://accesskeymanager-kp51.onrender.com/api/users/password/resets/confirms?token=" + resetToken;
+        return "https://accesskeymanager-kp51.onrender.com/auth/reset-password?token=" + resetToken;
     }
 
     public String generateResetLinkForFrontend(String resetToken) {
