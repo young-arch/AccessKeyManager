@@ -85,11 +85,11 @@ public class AuthenticationFront {
         return "reset-password";
     }
 
-    @PostMapping("/password/resets/confirms")
-    public String resetPassword(@RequestParam("token") String token,
-                                @RequestParam("newPassword") String newPassword,
-                                @RequestParam("confirmPassword") String confirmPassword,
-                                Model model) {
+    @PostMapping("/auth/password/resets/confirms")
+    public String resetPasswordWithForm(@RequestParam("token") String token,
+                                        @RequestParam("newPassword") String newPassword,
+                                        @RequestParam("confirmPassword") String confirmPassword,
+                                        Model model) {
         try {
             userService.resetPasswordWithToken(token, newPassword, confirmPassword);
             model.addAttribute("message", "Your password has been reset successfully. Please login with your new password.");
@@ -106,4 +106,5 @@ public class AuthenticationFront {
             return "reset-password";
         }
     }
+
 }

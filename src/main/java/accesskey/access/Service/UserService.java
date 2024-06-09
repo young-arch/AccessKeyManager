@@ -126,6 +126,11 @@ public class UserService{
         return "https://accesskeymanager-kp51.onrender.com/api/users/password/resets/confirms?token=" + resetToken;
     }
 
+    public String generateResetLinkForFrontend(String resetToken) {
+        return "https://accesskeymanager-kp51.onrender.com/auth/reset-password?token=" + resetToken;
+    }
+
+
 
 
     public void resetPasswordWithToken(String resetToken, String newPassword, String confirmPassword){

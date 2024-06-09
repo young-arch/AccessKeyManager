@@ -134,6 +134,7 @@ public class UserController{
 
 
 
+
     //Initiate User Verification(Accessible to everyone)
     @PostMapping("/verify")
     public ResponseEntity<Void> initiateVerification(@RequestBody String email){
