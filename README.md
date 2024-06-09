@@ -55,97 +55,6 @@ Software business Micro-Focus Inc. has created a multi-tenant school management 
 3. Implemented various API views, including all necessary methods for each view.
 4. Configured the admin and user panel.
 
-## Technologies Used
-- Backend:
-  - Java
-  - Spring Boot
-  - Spring Security
-  - Spring Data JPA
-  - PostgreSQL
-  - JavaMailSender
-  - RESTful APIs
-  -Spring-boot-starter Test
-  -junit - jupiter
-- Frontend:
-  - Thymeleaf
-  - Bootstrap (for frontend styling)
-
-## Getting Started
-
-### Prerequisites
-- JDK 11 or higher
-- Maven 3.6.3 or higher
-- PostgreSQL 12 or higher
-
-### Setup
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/young-arch/AccessKeyManager.git
-   cd AccessKeyManager
-   ```
-
-2. **Configure the database:**
-   - Ensure PostgreSQL is installed and running.
-   - Create a database named `postgres`.
-   - Update the `application.properties` file with your PostgreSQL credentials.
-
-3. **Update Email Configuration:**
-   - Configure the email settings in `application.properties`:
-     ```properties
-     spring.mail.host=smtp.gmail.com
-     spring.mail.port=587
-     spring.mail.username=your-email@gmail.com
-     spring.mail.password=your-email-password
-     spring.mail.properties.mail.smtp.auth=true
-     spring.mail.properties.mail.smtp.starttls.enable=true
-     spring.mail.properties.mail.smtp.starttls.required=true
-     spring.mail.properties.mail.smtp.ssl.trust=smtp.gmail.com
-     ```
-
-4. **Build the application:**
-   ```bash
-   mvn clean install
-   ```
-
-5. **Run the application:**
-   ```bash
-   mvn spring-boot:run
-   ```
-### ADMIN ACCOUNT DETAILS
- ```
-mail: mawulegabriel@gmail.com
-password: masters
-
- ```
-
-### Thymeleaf Frontend
-The application uses Thymeleaf templates for the frontend, providing a dynamic and interactive user interface. The following templates are included:
-## auth/home
--  `index.html`: Homepage with links to Login and Signup pages. 
-
-### auth/login
-- `login.html`: Login page. 
-
-### auth/signup
-- `signup.html`: Signup page.
-
-### auth/admin
--`adminPanel.html`: Admin page.
-
-### auth/user
--`userPanel.html`: Signup page.
-
-- `forgot-password.html`: Password reset request page.
-
-- `reset-password.html`: Password reset confirmation page.
-
-These templates are styled using Bootstrap for a modern and responsive design.
-
-#### Homepage
-The homepage (`index.html`) provides an overview of the application's purpose and includes buttons to navigate to the login and signup pages.
-
-
 ### API Endpoints
 
 #### User Endpoints
@@ -213,10 +122,6 @@ The homepage (`index.html`) provides an overview of the application's purpose an
   GET /api/accesskeys/expired
   ```
 
-### Role-Based Access Control
-- **Admin**: Can manage all users and access keys.
-- **School IT**: Can create access keys.
-
 ### Unit Tests
 The application includes unit tests to ensure all edge cases are handled properly. Here are the cases tested in the `UserServiceTest` class:
 
@@ -226,8 +131,88 @@ The application includes unit tests to ensure all edge cases are handled properl
 - **confirmVerification**: Test account verification with a valid token.
 - **confirmVerification_withExpiredToken**: Test account verification with an expired token.
 
-### ER Diagram
-The Entity-Relationship (ER) diagram of the database is included in the project repository under the folder name `ER_Diagram_Database`.
+
+
+
+### Thymeleaf Frontend
+
+The application uses Thymeleaf templates for the frontend, providing a dynamic and interactive user interface. The following templates are included:
+
+
+## auth/home -  `index.html`:
+<h3> Homepage with links to Login and Signup pages. </h3>
+<hr/>
+<a href="http://accesskeymanager-kp51.onrender.com/auth/home" target="_blank" title="Homepage">
+<img src="Homepage.PNG" width="100%" height="400px" />
+</a>
+<hr/>
+
+
+##auth/admin- -  `adminPanel.html`:
+<h3> Admin page. </h3>
+<hr/>
+<a href="http://accesskeymanager-kp51.onrender.com/auth/login" target="_blank" title="UserPanel">
+<img src="AdminPanel.PNG" width="100%" height="400px" />
+</a>
+<hr/>
+
+##auth/user
+<h3> Admin page. </h3>
+<hr/>
+<a href="http://accesskeymanager-kp51.onrender.com/auth/login" target="_blank" title="AdminPanel">
+<img src="UserPanel.PNG" width="100%" height="400px" />
+</a>
+<hr/>
+
+- `forgot-password.html`: Password reset request page.
+
+- `reset-password.html`: Password reset confirmation page.
+
+These templates are styled using Bootstrap for a modern and responsive design.
+
+
+### Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/young-arch/AccessKeyManager.git
+   cd AccessKeyManager
+   ```
+
+2. **Configure the database:**
+   - Ensure PostgreSQL is installed and running.
+   - Create a database named `postgres`.
+   - Update the `application.properties` file with your PostgreSQL credentials.
+
+3. **Update Email Configuration:**
+   - Configure the email settings in `application.properties`:
+     ```properties
+     spring.mail.host=smtp.gmail.com
+     spring.mail.port=587
+     spring.mail.username=your-email@gmail.com
+     spring.mail.password=your-email-password
+     spring.mail.properties.mail.smtp.auth=true
+     spring.mail.properties.mail.smtp.starttls.enable=true
+     spring.mail.properties.mail.smtp.starttls.required=true
+     spring.mail.properties.mail.smtp.ssl.trust=smtp.gmail.com
+     ```
+
+4. **Build the application:**
+   ```bash
+   mvn clean install
+   ```
+
+5. **Run the application:**
+   ```bash
+   mvn spring-boot:run
+   ```
+## Getting Started
+
+### Prerequisites
+- JDK 11 or higher
+- Maven 3.6.3 or higher
+- PostgreSQL 12 or higher
+
 
 ### Using Postman
 1. Import the provided Postman collection to access and test all endpoints.
@@ -237,6 +222,29 @@ The Entity-Relationship (ER) diagram of the database is included in the project 
 ### Troubleshooting
 - **Mail Server Connection Issues**: Ensure your email configuration is correct and the email server is accessible.
 - **Database Connection Issues**: Ensure PostgreSQL is running and the credentials in `application.properties` are correct..
+
+
+### ER Diagram
+The Entity-Relationship (ER) diagram of the database is included in the project repository under the folder name `ER_Diagram_Database`.
+
+
+## Get Involved
+
+I welcome contributions and participation from the community to help make this backend API even better! Whether you're looking to fix bugs, add new features, or improve documentation, your help is greatly appreciated. Here's how you can get involved:
+
+### Reporting Issues 🚩
+
+If you encounter any bugs or issues, please report them using the <a href="https://github.com/young-arch/AccessKeyManager/issues"> Issues</a> section of my GitHub repository. When reporting issues, please include:
+
+-   A clear and descriptive title.
+-   A detailed description of the problem, including steps to reproduce it.
+-   Any relevant logs or error messages.
+    Your environment details (e.g., SprinBoot version, database, etc.).
+
+### Contributing Code 💁🏼
+
+I love receiving pull requests from the community! If you have an improvement or a new feature you'd like to add, please feel free to do so 👍
+
 
 ## Contact
 For any questions or feedback, please contact gabriel.sakyi@ucc.stu.edu.gh
