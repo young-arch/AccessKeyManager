@@ -1,18 +1,59 @@
-# AccessKey Management System
+# Access Key Manager build with <a href=" https://spring.io/projects/spring-boot /" target="_blank">SpringBoot Rest FrameWork</a> and <a href=" https://www.thymeleaf.org/ " target="_blank"> Thymeleaf
 
 ## Overview
 The AccessKey Management System is a web application designed to manage access keys for various users, including School IT personnel and administrators. The system supports user registration, access key creation, password reset, and email notifications.
 
-## Features
-- User Registration
-- User Authentication
-- Role-based Access Control
-- Access Key Creation
-- Invalidate Access Key
-- Find Expired and Active AccessKey
-- Password Reset via Email
-- Email Notifications
-- Thymeleaf-based Frontend
+
+## Project Goal 
+Software business Micro-Focus Inc. has created a multi-tenant school management platform. The platform can be configured by different schools to appear as though it was made just for them. As an alternative to building payment functionality right into the software, they have opted to monetize their product through the usage of access keys. The goal of this project is to provide a web application that schools may use to buy and keep track of access keys for account activation.
+
+
+## Major Features 🔑
+
+### School IT Personnel
+1.	**`Signup & Login`**: School IT personnel is able to sign up and log in with an email and password. Account verification and a reset password feature to recover lost passwords is included.
+2. **`Access Key Management`**: User is able to see a list of all access keys granted: active, expired, or revoked.
+3. **`Key Details`**: For each access key, users can see the status, date of procurement, and expiry date.
+4. **`Key Constraints`**: Users should not be able to obtain a new key if an active key is already    assigned. Only one key can be active at a time.
+
+
+### Micro-Focus Admin
+
+1. **`Admin Login`**: Admin can log in with an email and password.
+2. **`Manual Key Revocation`**: Admin can manually revoke an access key.
+3. **`Key Overview`**: Admins can see all keys generated on the platform, including their status, date of procurement, and expiry date.
+4. **`Active Key LookUp Endpoint`**: Admins can access an endpoint that, given a school email, returns the status and details of the active key if any, or a 404 status if no active key is found. This allows integration with the school management software.
+
+
+## System Credentials - Testing ⚙️
+
+**Admin**
+
+-   Email - `mawulegabriel@gmail.com`
+-   Password - `masters`
+
+
+
+**School IT Personnel(s)**
+
+-   Email - `sakyi.gabriel@stu.ucc.edu.gh`
+-   Password - `user@123`
+
+---
+
+-   Email - `laurensaint477@gmail.com`
+-   Password - `user@123`
+
+---
+
+-   Email - `havardtechs@gmail.com`
+-   Password - `user@123
+
+### Activities involved in the project:
+1. Developed unit tests to cover all edge cases.
+2. Created and configured database models (tables).
+3. Implemented various API views, including all necessary methods for each view.
+4. Configured the admin and user panel.
 
 ## Technologies Used
 - Backend:
