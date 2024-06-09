@@ -75,7 +75,7 @@ Software business Micro-Focus Inc. has created a multi-tenant school management 
    
 
 ### API Endpoints
-<h1>```https://accesskeymanager-kp51.onrender.com```</h1>
+### [https://accesskeymanager-kp51.onrender.com](https://accesskeymanager-kp51.onrender.com)
 
 #### User Endpoints
 - **Register a new user:**
