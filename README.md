@@ -157,7 +157,7 @@ The application uses Thymeleaf templates for the frontend, providing a dynamic a
 <hr/>
 
 ##auth/user
-<h3> Admin page. </h3>
+<h3> User page. </h3>
 <hr/>
 <a href="http://accesskeymanager-kp51.onrender.com/auth/login" target="_blank" title="AdminPanel">
 <img src="UserPanel.PNG" width="100%" height="400px" />
