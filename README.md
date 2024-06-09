@@ -105,9 +105,9 @@ Software business Micro-Focus Inc. has created a multi-tenant school management 
 
 - **Confirm password reset:**
   ```http
-  POST /api/users/password/resets/confirms
+  POST /api/users/password/resets/confirms?token
   {
-      "token": "generated-reset-token",
+      
       "newPassword": "new-password",
       "confirmPassword": "confirm-password"
   }
