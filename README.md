@@ -107,6 +107,7 @@ Software business Micro-Focus Inc. has created a multi-tenant school management 
   ```http
   POST /api/users/password/resets/confirms
   {
+      "token": "generated-reset-token",
       "newPassword": "new-password",
       "confirmPassword": "confirm-password"
   }
